@@ -1,0 +1,10 @@
+JobRole,Competencies
+Sales Executive,"['Communication', 'Negotiation', 'Customer Focus']"
+Research Scientist,"['Technical Expertise', 'Analysis', 'Innovation']"
+Laboratory Technician,"['Technical Skills', 'Attention to Detail', 'Safety Compliance']"
+Manufacturing Director,"['Leadership', 'Operations Management', 'Strategic Planning']"
+Healthcare Representative,"['Healthcare Knowledge', 'Patient Care', 'Compliance']"
+Manager,"['Leadership', 'Team Management', 'Strategic Thinking']"
+Sales Representative,['General Skills']
+Research Director,['General Skills']
+Human Resources,"['HR Policies', 'Employee Relations', 'Recruitment']"

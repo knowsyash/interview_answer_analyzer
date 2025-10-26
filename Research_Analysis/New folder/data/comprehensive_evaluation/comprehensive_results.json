@@ -1,0 +1,26 @@
+{
+  "model": "Gradient Boosting",
+  "total_records": 1480,
+  "training_samples": 1184,
+  "test_samples": 296,
+  "coverage": 100.0,
+  "exact_accuracy": 63.17567567567568,
+  "within_1_accuracy": 99.66216216216216,
+  "mae": 0.3716216216216216,
+  "competencies": {
+    "['Communication', 'Negotiation', 'Customer Focus']": 326,
+    "['Technical Expertise', 'Analysis', 'Innovation']": 292,
+    "['Technical Skills', 'Attention To Detail', 'Safety Compliance']": 259,
+    "['General Skills']": 163,
+    "['Leadership', 'Operations Management', 'Strategic Planning']": 145,
+    "['Healthcare Knowledge', 'Patient Care', 'Compliance']": 131,
+    "['Leadership', 'Team Management', 'Strategic Thinking']": 102,
+    "['Hr Policies', 'Employee Relations', 'Recruitment']": 52,
+    "Teamwork": 2,
+    "Leadership": 2,
+    "Result Oriented": 2,
+    "Communication": 2,
+    "Problem Solving": 1,
+    "Integrity": 1
+  }
+}

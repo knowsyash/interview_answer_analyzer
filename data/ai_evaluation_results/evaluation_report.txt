@@ -1,0 +1,48 @@
+======================================================================
+AI vs HUMAN EVALUATOR - PERFORMANCE REPORT
+======================================================================
+
+Total Records: 10
+Interpretable Records: 8
+Uninterpretable Records: 2
+
+Coverage: 80.00%
+Exact Match Accuracy: 37.50%
+Within ±1 Accuracy: 50.00%
+Mean Absolute Error (MAE): 1.250
+Root Mean Squared Error (RMSE): 1.658
+
+======================================================================
+COMPETENCY-WISE PERFORMANCE
+======================================================================
+
+Leadership:
+  - Records: 2
+  - Accuracy: 100.00%
+  - MAE: 0.000
+
+Teamwork:
+  - Records: 1
+  - Accuracy: 0.00%
+  - MAE: 1.000
+
+Integrity:
+  - Records: 1
+  - Accuracy: 0.00%
+  - MAE: 2.000
+
+Communication:
+  - Records: 1
+  - Accuracy: 0.00%
+  - MAE: 2.000
+
+Result Oriented:
+  - Records: 2
+  - Accuracy: 50.00%
+  - MAE: 1.000
+
+Problem Solving:
+  - Records: 1
+  - Accuracy: 0.00%
+  - MAE: 3.000
+

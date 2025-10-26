@@ -1,0 +1,310 @@
+[
+  {
+    "question":"What is the difference between <div> and <span> elements in HTML?",
+    "answer":"<div> is a block-level element that creates a new line and takes up the full width available, while <span> is an inline element that only takes up as much width as necessary and doesn't force a new line. Block elements like div are used for layout structure and grouping larger sections, whereas inline elements like span are used for styling or grouping small portions of text within a line. You can change their display behavior using CSS display property.",
+    "competency":"['HTML', 'Web Fundamentals', 'Frontend Development']",
+    "human_score":8,
+    "primary_category":"HTML"
+  },
+  {
+    "question":"Explain the purpose of semantic HTML5 elements like <article>, <section>, and <aside>.",
+    "answer":"Semantic HTML5 elements provide meaning and structure to web content. <article> represents self-contained, independent content that could be distributed separately (like blog posts or news articles). <section> groups related content together thematically. <aside> contains tangentially related content (like sidebars or pull quotes). These elements improve accessibility for screen readers, help search engines understand page structure for better SEO, make code more readable and maintainable, and provide better document outlining. Unlike generic divs, semantic elements clearly communicate the purpose of content.",
+    "competency":"['HTML5', 'Semantic Web', 'Accessibility', 'SEO']",
+    "human_score":9,
+    "primary_category":"HTML5"
+  },
+  {
+    "question":"What are data attributes in HTML5 and how are they used?",
+    "answer":"Data attributes (data-*) are custom attributes that allow you to store extra information on HTML elements without using non-standard attributes. They start with 'data-' followed by a custom name. For example: <div data-user-id='123' data-role='admin'>. You can access them in JavaScript using element.dataset.userId or getAttribute('data-user-id'). They're useful for storing metadata, passing data to JavaScript, creating hooks for CSS selectors, and keeping HTML valid while adding custom information. Unlike using classes or IDs, data attributes are specifically designed for storing custom data.",
+    "competency":"['HTML5', 'JavaScript', 'DOM Manipulation']",
+    "human_score":8,
+    "primary_category":"HTML5"
+  },
+  {
+    "question":"Explain the difference between local storage, session storage, and cookies.",
+    "answer":"localStorage stores data with no expiration date (persists even after browser closes), accessible only from same origin, and has ~5-10MB storage limit. sessionStorage is similar but data is cleared when the page session ends (browser tab closes), also ~5-10MB. Cookies are smaller (4KB limit), can have expiration dates, are sent with every HTTP request to the server, and can be made accessible across subdomains. localStorage and sessionStorage are client-side only (not sent to server), while cookies go back and forth. Use localStorage for persistent client data, sessionStorage for temporary tab-specific data, and cookies for server communication and cross-domain data.",
+    "competency":"['Web Storage', 'Browser APIs', 'Client-Side Storage']",
+    "human_score":9,
+    "primary_category":"Web Storage"
+  },
+  {
+    "question":"How does the HTML5 History API work and what are its use cases?",
+    "answer":"The History API allows manipulation of browser session history without full page reloads. Key methods include pushState() to add entries, replaceState() to modify current entry, and the popstate event to handle back\/forward navigation. It enables Single Page Applications (SPAs) to update the URL without page refresh, creating bookmarkable URLs for dynamic content. For example: history.pushState({page: 1}, 'Title', '\/page-1') changes URL to \/page-1. Use cases include: implementing client-side routing in frameworks like React Router, creating better user experience in SPAs, maintaining browser history in AJAX applications, and allowing users to use back\/forward buttons in dynamic web apps.",
+    "competency":"['HTML5 APIs', 'SPA Development', 'Client-Side Routing']",
+    "human_score":9,
+    "primary_category":"HTML5 APIs"
+  },
+  {
+    "question":"What is the box model in CSS? Explain its components.",
+    "answer":"The CSS box model describes how elements are rendered as rectangular boxes. From innermost to outermost: Content (actual content like text\/images), Padding (space between content and border, background extends through it), Border (surrounds padding, can be styled with width\/color\/style), and Margin (space outside border, separates element from others). Total element width = content width + padding-left + padding-right + border-left + border-right (margin is outside). box-sizing property controls this: content-box (default, width applies to content only) or border-box (width includes padding and border, easier for layouts).",
+    "competency":"['CSS', 'Layout', 'Frontend Development']",
+    "human_score":9,
+    "primary_category":"CSS"
+  },
+  {
+    "question":"What is the difference between inline, inline-block, and block display properties?",
+    "answer":"Block elements (display: block) start on a new line, take full width available, and respect all box model properties (width, height, margin, padding). Examples: div, p, h1. Inline elements (display: inline) flow with text, only take necessary width, and ignore width\/height properties and vertical margins. Examples: span, a, strong. Inline-block (display: inline-block) combines both: flows inline like text but respects width, height, and all margins\/padding like block elements. Useful for creating horizontal layouts of boxes, navigation menus, or inline elements that need specific dimensions.",
+    "competency":"['CSS', 'Display Properties', 'Layout']",
+    "human_score":8,
+    "primary_category":"CSS"
+  },
+  {
+    "question":"Explain CSS Flexbox and its main properties.",
+    "answer":"Flexbox is a one-dimensional layout system for distributing space and aligning items in a container. Parent (flex container) properties: display: flex activates it, flex-direction (row\/column) sets main axis, justify-content (flex-start\/center\/space-between\/space-around) aligns items on main axis, align-items (stretch\/center\/flex-start\/flex-end) aligns on cross axis, flex-wrap (nowrap\/wrap) controls wrapping. Child (flex item) properties: flex-grow (how much item grows), flex-shrink (how much it shrinks), flex-basis (initial size), flex shorthand combines all three, align-self overrides align-items for individual items. Flexbox excels at: centering content, creating equal-height columns, distributing space, and responsive layouts.",
+    "competency":"['CSS', 'Flexbox', 'Modern Layout', 'Responsive Design']",
+    "human_score":9,
+    "primary_category":"CSS"
+  },
+  {
+    "question":"What is CSS Grid and how does it differ from Flexbox?",
+    "answer":"CSS Grid is a two-dimensional layout system that works with rows AND columns simultaneously, while Flexbox is one-dimensional (either row OR column). Grid is defined with display: grid, then grid-template-columns and grid-template-rows to create explicit grid structure. Key properties: grid-template-areas for naming regions, gap for spacing, grid-column\/grid-row for item placement. Use Grid for: complex page layouts, 2D layouts, when you need precise control over rows and columns. Use Flexbox for: simpler one-dimensional layouts, navigation menus, centering items, distributing space among items. They complement each other - Grid for overall page structure, Flexbox for components within grid cells.",
+    "competency":"['CSS Grid', 'Layout Systems', 'Modern CSS']",
+    "human_score":9,
+    "primary_category":"CSS Grid"
+  },
+  {
+    "question":"Explain CSS specificity and how it determines which styles are applied.",
+    "answer":"CSS specificity determines which rule applies when multiple rules target the same element. Calculated as four-part value (inline, IDs, classes\/attributes\/pseudo-classes, elements\/pseudo-elements). Inline styles (1,0,0,0) have highest specificity. IDs (0,1,0,0) beat classes. Classes, attributes, and pseudo-classes (0,0,1,0) beat elements. Element selectors (0,0,0,1) have lowest. Examples: #header .nav a (0,1,1,1) beats .nav a (0,0,1,1). !important overrides everything but should be avoided. When specificity is equal, the last rule wins (cascade). Best practices: use classes over IDs for styling, avoid !important, keep specificity low for maintainability, use CSS methodology like BEM to manage specificity.",
+    "competency":"['CSS', 'Specificity', 'Cascade', 'Best Practices']",
+    "human_score":9,
+    "primary_category":"CSS"
+  },
+  {
+    "question":"What are CSS preprocessors like SASS\/SCSS? What advantages do they provide?",
+    "answer":"CSS preprocessors (SASS, SCSS, LESS, Stylus) extend CSS with programming features, then compile to standard CSS. SCSS is most popular, using CSS-like syntax. Key features: Variables ($primary-color: #007bff) for reusable values, Nesting (selectors inside selectors) for hierarchy, Mixins (@mixin border-radius($radius)) for reusable code blocks, Functions for calculations, Partials and @import for file organization, Inheritance (@extend) to share rules. Advantages: DRY code (don't repeat yourself), better organization with partials, mathematical operations, easier maintenance, color functions (darken, lighten), conditionals and loops for complex logic. Compiled CSS is still what browsers read, preprocessors just improve developer experience.",
+    "competency":"['CSS', 'SASS', 'SCSS', 'Build Tools', 'Frontend Workflow']",
+    "human_score":8,
+    "primary_category":"CSS"
+  },
+  {
+    "question":"What is the difference between var, let, and const in JavaScript?",
+    "answer":"var is function-scoped, hoisted with undefined initialization, and can be redeclared. let is block-scoped (only accessible within {}), hoisted but not initialized (temporal dead zone), cannot be redeclared in same scope, and can be reassigned. const is also block-scoped, must be initialized at declaration, cannot be reassigned (but object properties can be modified), and cannot be redeclared. Best practices: use const by default for values that won't be reassigned, use let when reassignment is needed, avoid var to prevent scope issues and bugs. const doesn't make objects immutable, only the binding - use Object.freeze() for true immutability.",
+    "competency":"['JavaScript', 'ES6', 'Variables', 'Scope']",
+    "human_score":9,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"Explain what closures are in JavaScript.",
+    "answer":"A closure is a function that has access to variables in its outer (enclosing) function's scope, even after the outer function has returned. When a function is created, it keeps a reference to its lexical environment. Common uses: data privacy (private variables), function factories, callbacks maintaining state, and partial application. Example: function outer() { let count = 0; return function inner() { count++; return count; }} - inner() is a closure accessing count even after outer() completes. Closures enable: module pattern for encapsulation, event handlers maintaining context, setTimeout\/setInterval retaining variables, and functional programming patterns like currying.",
+    "competency":"['JavaScript', 'Closures', 'Scope', 'Functional Programming']",
+    "human_score":9,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"What is the event loop in JavaScript and how does it work?",
+    "answer":"The event loop is JavaScript's concurrency model that handles asynchronous operations in a single-threaded environment. JavaScript has a call stack (executes functions), Web APIs (handles async operations like setTimeout, HTTP requests), callback queue (holds completed async callbacks), and microtask queue (for promises, higher priority). Event loop continuously checks: if call stack is empty, process microtasks first (promises, queueMicrotask), then process one macrotask from callback queue (setTimeout, setInterval, I\/O). This allows non-blocking I\/O - async operations run in background while other code executes. Understanding it helps debug async behavior, optimize performance, and avoid blocking the main thread.",
+    "competency":"['JavaScript', 'Event Loop', 'Asynchronous Programming', 'Runtime']",
+    "human_score":10,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"Explain promises and async\/await in JavaScript.",
+    "answer":"Promises represent eventual completion\/failure of async operations. Three states: pending, fulfilled (resolved), or rejected. Created with new Promise((resolve, reject) => {}). Methods: .then() for success, .catch() for errors, .finally() for cleanup. Promise.all() runs multiple promises in parallel, Promise.race() returns first settled. Async\/await is syntactic sugar over promises - makes async code look synchronous. 'async' function always returns a promise. 'await' pauses execution until promise resolves, can only be used in async functions. Benefits: cleaner code, easier error handling with try\/catch, better readability than promise chains. Use promises for simpler cases, async\/await for complex async flows or when you need sequential operations.",
+    "competency":"['JavaScript', 'Promises', 'Async\/Await', 'Asynchronous Programming']",
+    "human_score":9,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"What is the difference between == and === in JavaScript?",
+    "answer":"== (loose equality) compares values after type coercion - it converts operands to same type before comparison. === (strict equality) compares both value AND type without coercion. Examples: 5 == '5' is true (string converted to number), but 5 === '5' is false (different types). null == undefined is true, but null === undefined is false. 0 == false is true (both falsy), 0 === false is false (different types). Best practice: always use === and !== to avoid unexpected type coercion bugs. Exceptions: checking for null or undefined together (value == null catches both). Type coercion can lead to confusing bugs like [] == ![] being true due to complex conversion rules.",
+    "competency":"['JavaScript', 'Operators', 'Type Coercion', 'Comparison']",
+    "human_score":8,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"Explain prototypal inheritance in JavaScript.",
+    "answer":"JavaScript uses prototypal inheritance where objects inherit directly from other objects. Every object has an internal [[Prototype]] link (accessed via __proto__ or Object.getPrototypeOf()) pointing to its prototype object. When accessing a property, JavaScript looks on the object first, then walks up the prototype chain until found or reaches null. Constructor functions have a .prototype property that becomes the [[Prototype]] of instances created with 'new'. ES6 classes are syntactic sugar over prototypes. Example: function Person(name) {this.name = name}; Person.prototype.greet = function() {}; - all instances share the greet method. Benefits: memory efficiency (methods shared, not duplicated), dynamic - can modify prototype anytime. Modern approach uses class syntax but prototypes work underneath.",
+    "competency":"['JavaScript', 'Prototypes', 'Inheritance', 'OOP']",
+    "human_score":9,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"What are higher-order functions in JavaScript? Provide examples.",
+    "answer":"Higher-order functions are functions that either take functions as arguments or return functions (or both). They enable functional programming patterns. Common examples: Array methods like map() (transforms array), filter() (selects elements), reduce() (accumulates value), forEach() (iterates). Example: [1,2,3].map(x => x * 2) returns [2,4,6] - map takes a function as argument. Function factories return functions: function multiplier(factor) { return x => x * factor }. Callbacks are higher-order: setTimeout(callback, 1000). Benefits: code reusability, abstraction, composition, declarative style. Enables patterns like currying, partial application, function composition, and decorator pattern. Makes code more expressive and maintainable.",
+    "competency":"['JavaScript', 'Functional Programming', 'Higher-Order Functions', 'ES6']",
+    "human_score":8,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"Explain the concept of hoisting in JavaScript.",
+    "answer":"Hoisting is JavaScript's behavior of moving declarations to the top of their scope during compilation, before code execution. Function declarations are fully hoisted - can be called before they appear in code. Variable declarations with var are hoisted but initialized with undefined (declaration hoisted, assignment stays). let and const are hoisted but not initialized - accessing before declaration causes ReferenceError (temporal dead zone from scope start to declaration). Class declarations are hoisted but not initialized. Best practices: declare variables at top of scope, use let\/const (block-scoped) instead of var, declare functions before use for clarity. Example: console.log(x) before var x = 5 prints undefined, but with let x throws error. Understanding hoisting prevents bugs from unexpected undefined values.",
+    "competency":"['JavaScript', 'Hoisting', 'Execution Context', 'Scope']",
+    "human_score":8,
+    "primary_category":"JavaScript"
+  },
+  {
+    "question":"What is JSX in React?",
+    "answer":"JSX (JavaScript XML) is a syntax extension for JavaScript that looks like HTML but produces React elements. It's not a string or HTML - it's syntactic sugar for React.createElement() calls. JSX can embed JavaScript expressions using curly braces {}, supports all HTML attributes (as camelCase like className, onClick), allows JavaScript logic inline, and must return single root element (or use fragments <>). Babel transpiles JSX to React.createElement('div', {className: 'app'}, 'Hello'). Benefits: familiar HTML-like syntax, easier to visualize component structure, type safety with TypeScript, prevents XSS by escaping values. JSX is optional but widely used. You can write JavaScript in JSX {}, but JSX itself must be inside JavaScript parentheses in return statements.",
+    "competency":"['React', 'JSX', 'Frontend Framework', 'Component-Based Development']",
+    "human_score":8,
+    "primary_category":"React"
+  },
+  {
+    "question":"What are React components? Explain functional vs class components.",
+    "answer":"React components are reusable, independent pieces of UI that return JSX. Class components extend React.Component, have lifecycle methods, use this.state and this.setState(), and can have this.props. Functional components are JavaScript functions that take props as argument and return JSX - simpler, no 'this' keyword. With React Hooks (useState, useEffect, etc.), functional components can now have state and lifecycle features that were only in class components. Modern React favors functional components because they're: simpler syntax, easier to test, better performance (no instance), enable hooks for logic reuse, and encourage composition. Class components are legacy but still supported. Functional example: const Button = ({text}) => <button>{text}<\/button>. Class example: class Button extends React.Component { render() { return <button>{this.props.text}<\/button> }}",
+    "competency":"['React', 'Components', 'Functional Programming', 'Modern React']",
+    "human_score":9,
+    "primary_category":"React"
+  },
+  {
+    "question":"Explain the React component lifecycle methods.",
+    "answer":"Lifecycle methods are hooks into different phases of a component's existence (class components only, functional components use useEffect). Mounting phase: constructor() for state initialization, render() to return JSX, componentDidMount() after component inserted into DOM (API calls, subscriptions). Updating phase: triggered by state\/props changes - shouldComponentUpdate() for optimization, render(), componentDidUpdate() after updates (side effects). Unmounting: componentWillUnmount() for cleanup (clear timers, cancel requests, remove listeners). Error handling: componentDidCatch() to catch errors in child components. In functional components, useEffect() replaces most lifecycle methods: useEffect(() => {}, []) = componentDidMount, useEffect(() => {}) = componentDidUpdate, useEffect(() => { return cleanup }, []) = componentWillUnmount. Modern React prefers hooks over lifecycle methods.",
+    "competency":"['React', 'Lifecycle Methods', 'Component Behavior', 'Class Components']",
+    "human_score":9,
+    "primary_category":"React"
+  },
+  {
+    "question":"What are React Hooks? Explain useState and useEffect.",
+    "answer":"Hooks are functions that let you use state and lifecycle features in functional components. useState() manages component state: const [count, setCount] = useState(0) - returns current state and updater function. Call setCount(newValue) or setCount(prev => prev + 1) for updates based on previous state. useEffect() handles side effects (data fetching, subscriptions, DOM manipulation): runs after render, optional dependencies array controls when it runs - empty [] runs once on mount, [dep] runs when dep changes, no array runs on every render. Return cleanup function for unmounting. Other hooks: useContext (consume context), useReducer (complex state), useCallback (memoize functions), useMemo (memoize values), useRef (mutable reference). Benefits: reuse stateful logic without HOCs or render props, organize code by concern not lifecycle, no 'this' confusion.",
+    "competency":"['React', 'Hooks', 'useState', 'useEffect', 'Modern React']",
+    "human_score":10,
+    "primary_category":"React"
+  },
+  {
+    "question":"What is the Virtual DOM in React and how does it work?",
+    "answer":"The Virtual DOM is a lightweight JavaScript representation of the actual DOM. React maintains a virtual copy of the UI in memory. When state changes, React creates a new Virtual DOM tree, compares it with the previous one (diffing\/reconciliation), calculates minimal changes needed, and updates only changed parts in the real DOM (batching updates for performance). This is faster than manipulating the real DOM directly because DOM operations are expensive. React's reconciliation algorithm uses keys to identify elements, updates component tree efficiently, and batches updates. Benefits: better performance through minimal DOM updates, declarative programming model (describe UI, React handles updates), cross-platform rendering (React Native uses same concept). The Virtual DOM is an implementation detail - developers just update state, React handles efficient rendering.",
+    "competency":"['React', 'Virtual DOM', 'Performance', 'Reconciliation']",
+    "human_score":9,
+    "primary_category":"React"
+  },
+  {
+    "question":"Explain React Context API and when to use it.",
+    "answer":"Context API provides a way to pass data through component tree without prop drilling (passing props through intermediate components). Create context: const ThemeContext = React.createContext(defaultValue). Provider supplies value: <ThemeContext.Provider value={theme}>. Consumer accesses value: const theme = useContext(ThemeContext) in functional components or <ThemeContext.Consumer> in class components. Use cases: global state (theme, language, user auth), avoiding prop drilling in deep trees, sharing data across many components. When NOT to use: frequently changing data (causes all consumers to re-render), simple parent-child communication (use props), complex state management (use Redux\/Zustand instead). Context is built-in, simpler than Redux for small apps, but every context change re-renders all consumers, so optimize with React.memo or split into multiple contexts.",
+    "competency":"['React', 'Context API', 'State Management', 'Component Communication']",
+    "human_score":9,
+    "primary_category":"React"
+  },
+  {
+    "question":"What is Redux and how does it manage state in React applications?",
+    "answer":"Redux is a predictable state container for JavaScript apps, commonly used with React. Core principles: single source of truth (one store for entire app state), state is read-only (only changed via actions), changes via pure reducer functions. Key concepts: Store holds state tree, Actions are objects describing what happened, Reducers are pure functions (state, action) => newState that specify state changes, Dispatch sends actions to store. Flow: Component dispatches action \u2192 Reducer creates new state \u2192 Store updates \u2192 Components re-render. React-Redux provides useSelector() to read state, useDispatch() to dispatch actions. Benefits: predictable state updates, time-travel debugging, middleware for async logic (Redux Thunk, Redux Saga). Use when: large app with complex state, state shared across many components, need debugging tools. Modern alternatives: Redux Toolkit (simplifies Redux), Zustand, Recoil.",
+    "competency":"['React', 'Redux', 'State Management', 'Flux Pattern']",
+    "human_score":9,
+    "primary_category":"React"
+  },
+  {
+    "question":"What is Node.js and how does it differ from browser JavaScript?",
+    "answer":"Node.js is a JavaScript runtime built on Chrome's V8 engine that lets you run JavaScript on the server. Differences from browser: Node has access to file system (fs module), network (http, net modules), operating system (os module), but no DOM, no window object, no browser APIs. Node uses CommonJS modules (require\/module.exports) though modern Node supports ES6 import\/export. Node has global object instead of window, has process object for environment variables and CLI args. Event-driven, non-blocking I\/O makes Node efficient for I\/O-heavy operations. Use cases: web servers, APIs, real-time applications (WebSocket), build tools, CLI tools, microservices. Node's single-threaded event loop handles many concurrent connections efficiently. NPM is Node's package manager with largest ecosystem of libraries.",
+    "competency":"['Node.js', 'Backend Development', 'JavaScript Runtime', 'Server-Side']",
+    "human_score":9,
+    "primary_category":"Node.js"
+  },
+  {
+    "question":"Explain the Node.js event-driven architecture.",
+    "answer":"Node.js uses an event-driven, non-blocking I\/O model. When async operation starts (file read, HTTP request), Node registers callback and continues executing other code. When operation completes, callback is queued and executed when call stack is empty. EventEmitter is core class for this pattern - objects emit named events, listeners respond. Example: server.on('request', handler). Event loop continuously checks for events to process. Benefits: handles thousands of concurrent connections with single thread, non-blocking means server stays responsive, efficient resource usage. Phases: timers (setTimeout, setInterval), pending callbacks, poll (retrieve new I\/O events), check (setImmediate), close callbacks. Understanding event loop helps optimize performance, avoid blocking operations, and debug async behavior. Use worker threads for CPU-intensive tasks to avoid blocking the event loop.",
+    "competency":"['Node.js', 'Event-Driven Architecture', 'Asynchronous Programming', 'Event Loop']",
+    "human_score":9,
+    "primary_category":"Node.js"
+  },
+  {
+    "question":"What is Express.js and why is it used?",
+    "answer":"Express.js is a minimal, flexible Node.js web application framework that simplifies building web servers and APIs. Provides robust features: routing (app.get('\/path', handler)), middleware (functions with access to req, res, next), request\/response handling, template engine support, static file serving. Example: app.get('\/', (req, res) => res.send('Hello')). Benefits: simple and minimalist, large ecosystem of middleware, very popular (de facto standard), handles routing elegantly, flexible and unopinionated. Features: HTTP method routing (GET, POST, PUT, DELETE), route parameters (\/user\/:id), query strings, request body parsing (with middleware), cookie handling, error handling middleware. Use when: building REST APIs, web applications, microservices. Alternatives: Koa (by Express creators), Fastify (faster), NestJS (opinionated, TypeScript-first), but Express remains most popular for its simplicity.",
+    "competency":"['Node.js', 'Express.js', 'Web Framework', 'API Development']",
+    "human_score":8,
+    "primary_category":"Node.js"
+  },
+  {
+    "question":"Explain middleware in Express.js and how it works.",
+    "answer":"Middleware are functions with access to request (req), response (res), and next function in the request-response cycle. They execute in order defined, can modify req\/res objects, end request-response cycle, or call next() to pass control. Types: Application-level (app.use()), router-level (router.use()), error-handling (4 parameters: err, req, res, next), built-in (express.json(), express.static()), third-party (morgan, cors, helmet). Example: app.use((req, res, next) => { console.log(Date.now()); next(); }). Order matters - middleware executes sequentially. Common uses: logging, authentication, body parsing, CORS, compression, error handling. Middleware can: execute code, modify req\/res, end cycle with res.send(), or call next(). If middleware doesn't call next() or end cycle, request hangs. Error middleware catches errors from previous middleware.",
+    "competency":"['Express.js', 'Middleware', 'Request Pipeline', 'Backend Development']",
+    "human_score":9,
+    "primary_category":"Express.js"
+  },
+  {
+    "question":"What is the difference between SQL and NoSQL databases?",
+    "answer":"SQL (Relational) databases use structured tables with predefined schemas, ACID transactions, SQL query language, relationships via foreign keys. Examples: PostgreSQL, MySQL, SQL Server. Good for: complex queries, transactions, data integrity, structured data. NoSQL databases are non-relational, schema-less or flexible schema, various types (document, key-value, graph, column-family). Examples: MongoDB (document), Redis (key-value), Neo4j (graph), Cassandra (column). Good for: flexible data, horizontal scaling, high write loads, unstructured data. Choose SQL for: banking, e-commerce, strict data integrity. Choose NoSQL for: real-time analytics, content management, IoT, social networks. NoSQL scales horizontally (add servers) easier than SQL's vertical scaling (bigger server). Modern apps often use both (polyglot persistence) for different data needs.",
+    "competency":"['Databases', 'SQL', 'NoSQL', 'Data Modeling']",
+    "human_score":9,
+    "primary_category":"Databases"
+  },
+  {
+    "question":"Explain CRUD operations in the context of databases.",
+    "answer":"CRUD represents the four basic database operations: Create (INSERT in SQL, insertOne in MongoDB) adds new records. Read (SELECT in SQL, find in MongoDB) retrieves data. Update (UPDATE in SQL, updateOne in MongoDB) modifies existing records. Delete (DELETE in SQL, deleteOne in MongoDB) removes records. In REST APIs, CRUD maps to HTTP methods: POST (Create), GET (Read), PUT\/PATCH (Update), DELETE (Delete). In application code: Create - user signup, new order. Read - view products, user profile. Update - edit profile, update cart. Delete - remove item, cancel order. Best practices: use transactions for related operations, validate before create\/update, soft delete (mark as deleted) vs hard delete, sanitize inputs to prevent SQL injection, use prepared statements, implement proper authorization. CRUD is fundamental to data-driven applications.",
+    "competency":"['Databases', 'CRUD', 'Data Operations', 'Backend Development']",
+    "human_score":8,
+    "primary_category":"Databases"
+  },
+  {
+    "question":"What is MongoDB and how does it store data?",
+    "answer":"MongoDB is a NoSQL document database that stores data in flexible, JSON-like BSON (Binary JSON) documents. Collections (like tables) contain documents (like rows), but documents in same collection can have different fields (schema-less). Example: {name: 'John', age: 30, tags: ['dev', 'js']}. Features: embedded documents (nested objects) for related data, arrays for multiple values, ObjectId for unique document identifiers, indexes for query performance, aggregation pipeline for complex queries, horizontal scaling via sharding, replica sets for high availability. Benefits: flexible schema (add fields easily), natural data representation (matches JavaScript objects), powerful queries, horizontal scalability. Use cases: content management, catalogs, user profiles, real-time analytics, IoT. Query example: db.users.find({age: {$gt: 25}}).limit(10). Unlike SQL joins, MongoDB uses embedded documents or manual references.",
+    "competency":"['MongoDB', 'NoSQL', 'Document Database', 'Data Modeling']",
+    "human_score":9,
+    "primary_category":"MongoDB"
+  },
+  {
+    "question":"Explain database indexing and its impact on performance.",
+    "answer":"Database indexes are data structures (usually B-trees) that improve query speed by creating pointers to data locations. Like a book index - instead of scanning every page, jump directly to location. Indexes store sorted column values with pointers to rows. Benefits: much faster queries (O(log n) vs O(n)), especially for large tables, enables efficient sorting and filtering. Tradeoffs: slower writes (index must update), uses disk space, too many indexes hurt performance. Types: single-column, composite (multiple columns), unique (enforces uniqueness), full-text (text search), spatial (geographic data). When to index: columns in WHERE clauses, JOIN conditions, ORDER BY columns, frequently queried foreign keys. When NOT to index: small tables, columns with low cardinality (few unique values), frequently updated columns. Example: CREATE INDEX idx_email ON users(email). Query planner chooses whether to use index based on statistics.",
+    "competency":"['Databases', 'Indexing', 'Performance Optimization', 'Query Optimization']",
+    "human_score":9,
+    "primary_category":"Databases"
+  },
+  {
+    "question":"What is a REST API?",
+    "answer":"REST (Representational State Transfer) is an architectural style for designing networked applications. RESTful APIs use HTTP requests to perform CRUD operations on resources (data entities). Key principles: stateless (each request contains all needed info), client-server separation, cacheable responses, uniform interface (standard HTTP methods), layered system, resource-based (URLs represent resources). Resources identified by URLs (\/users, \/users\/123), HTTP methods indicate action (GET read, POST create, PUT\/PATCH update, DELETE remove), responses use standard HTTP status codes (200 OK, 201 Created, 404 Not Found, 500 Error). Example: GET \/api\/users\/123 retrieves user 123, POST \/api\/users creates new user. Benefits: simple, scalable, stateless (easier to scale), uses standard HTTP, platform-independent. RESTful design makes APIs predictable, easy to use, and language-agnostic.",
+    "competency":"['REST API', 'Web Services', 'API Design', 'HTTP']",
+    "human_score":9,
+    "primary_category":"REST API"
+  },
+  {
+    "question":"Explain the different HTTP methods (GET, POST, PUT, DELETE, PATCH).",
+    "answer":"GET retrieves data, should be idempotent (same result on repeat) and safe (no side effects). URL parameters for filtering: GET \/users?role=admin. POST creates new resources, not idempotent (creates new each time), data in request body. Returns 201 Created with location header. PUT updates entire resource (replace), idempotent, requires full object. PUT \/users\/123 with complete user data. DELETE removes resource, idempotent (deleting twice same as once). PATCH partially updates (modify specific fields), not necessarily idempotent, send only changed fields. HEAD like GET but returns only headers (check if resource exists). OPTIONS describes available methods (CORS preflight). Safe methods (GET, HEAD) don't modify server state. Idempotent methods (GET, PUT, DELETE) produce same result when repeated. POST and PATCH are neither safe nor guaranteed idempotent.",
+    "competency":"['HTTP Methods', 'REST API', 'Web Protocols', 'API Design']",
+    "human_score":9,
+    "primary_category":"HTTP Methods"
+  },
+  {
+    "question":"What are HTTP status codes? Explain common ones (200, 404, 500, etc.).",
+    "answer":"HTTP status codes indicate the result of HTTP requests. Five classes: 1xx Informational (100 Continue), 2xx Success (200 OK - request succeeded, 201 Created - resource created, 204 No Content - success but no body), 3xx Redirection (301 Moved Permanently, 302 Found - temporary redirect, 304 Not Modified - use cached), 4xx Client Error (400 Bad Request - invalid syntax, 401 Unauthorized - authentication needed, 403 Forbidden - authenticated but no permission, 404 Not Found - resource doesn't exist, 405 Method Not Allowed, 409 Conflict - state conflict, 422 Unprocessable Entity - validation error), 5xx Server Error (500 Internal Server Error - server fault, 502 Bad Gateway - upstream server error, 503 Service Unavailable - temporarily down, 504 Gateway Timeout). Choose appropriate codes: 201 for create, 204 for delete, 400 for validation, 401\/403 for auth, 404 for not found, 500 for crashes.",
+    "competency":"['HTTP', 'Status Codes', 'REST API', 'Error Handling']",
+    "human_score":9,
+    "primary_category":"HTTP"
+  },
+  {
+    "question":"What is authentication and authorization in REST APIs? Explain JWT.",
+    "answer":"Authentication verifies WHO you are (login), authorization determines WHAT you can access (permissions). Common auth methods: Basic Auth (username:password in header, not secure), API Keys (unique key per client), OAuth 2.0 (delegated authorization, third-party login), JWT (JSON Web Tokens). JWT structure: header.payload.signature encoded in Base64. Header contains algorithm, payload contains claims (user data, expiration), signature verifies integrity. Flow: client sends credentials \u2192 server validates \u2192 returns JWT \u2192 client includes JWT in Authorization header for subsequent requests \u2192 server verifies signature and extracts claims. Benefits: stateless (server doesn't store sessions), scalable, works across domains. Considerations: store JWT securely (httpOnly cookie or memory), use HTTPS, set expiration, refresh tokens for long-term access. Authorization often uses role-based (RBAC) or attribute-based (ABAC) access control.",
+    "competency":"['Authentication', 'Authorization', 'JWT', 'Security', 'REST API']",
+    "human_score":10,
+    "primary_category":"Authentication"
+  },
+  {
+    "question":"What is CORS (Cross-Origin Resource Sharing) and why is it important?",
+    "answer":"CORS is a security mechanism that allows or restricts web pages to make requests to a different domain than the one serving the page. Same-origin policy blocks cross-origin requests by default for security. CORS headers tell browsers to allow: Access-Control-Allow-Origin (which origins can access), Access-Control-Allow-Methods (allowed HTTP methods), Access-Control-Allow-Headers (allowed headers), Access-Control-Allow-Credentials (cookies allowed). Preflight request (OPTIONS) checks permissions before actual request. Example: frontend on localhost:3000 calling API on api.example.com needs CORS. Server responds with Access-Control-Allow-Origin: localhost:3000. Without CORS: browser blocks request, protecting users from malicious sites. Implementation: configure server middleware (Express: cors package), set specific origins vs wildcard (*), handle preflight. Common in: SPAs calling separate API servers, public APIs, microservices. CORS errors indicate security restrictions, not server issues.",
+    "competency":"['Security', 'CORS', 'Web Security', 'Browser Security']",
+    "human_score":9,
+    "primary_category":"Security"
+  },
+  {
+    "question":"Explain XSS (Cross-Site Scripting) attacks and how to prevent them.",
+    "answer":"XSS occurs when attacker injects malicious scripts into trusted websites that execute in victim's browser. Types: Stored XSS (script saved in database, affects all users), Reflected XSS (script in URL, affects current user), DOM-based XSS (client-side script manipulation). Example: comment field accepting <script>steal_cookies()<\/script>. Consequences: steal cookies\/tokens, hijack sessions, deface websites, redirect users, install malware. Prevention: escape\/sanitize all user input before display (convert < to &lt;), use Content Security Policy (CSP) headers to restrict script sources, validate and sanitize on server, use httpOnly cookies (JavaScript can't access), modern frameworks (React, Vue) auto-escape by default, avoid innerHTML (use textContent), validate input types, implement output encoding. Libraries: DOMPurify for sanitization. Never trust client-side validation alone - always validate server-side.",
+    "competency":"['Security', 'XSS', 'Web Security', 'Input Validation']",
+    "human_score":9,
+    "primary_category":"Security"
+  },
+  {
+    "question":"What is CSRF (Cross-Site Request Forgery) and how do you protect against it?",
+    "answer":"CSRF tricks authenticated user into executing unwanted actions on a web application they're logged into. Attacker creates malicious request (form, image, link) on their site that targets victim's site where user is authenticated. Example: user logged into bank.com visits evil.com, which submits form to bank.com\/transfer (using user's cookies). Protection methods: CSRF tokens (unique secret per session\/request, included in forms, validated by server), SameSite cookie attribute (prevents cookie sending on cross-site requests), verify Origin\/Referer headers, require re-authentication for sensitive actions, use POST for state changes (not GET), short session timeouts. Implementation: generate random token on page load, include in hidden form field or custom header, server validates token matches session. Modern frameworks (Django, Rails, Express with csurf) have built-in CSRF protection. CSRF tokens are secret, unpredictable, and tied to user session.",
+    "competency":"['Security', 'CSRF', 'Web Security', 'Attack Prevention']",
+    "human_score":10,
+    "primary_category":"Security"
+  },
+  {
+    "question":"What are some ways to optimize website loading performance?",
+    "answer":"Performance optimizations: 1) Minimize file sizes - minify CSS\/JS, compress images (WebP format), use gzip\/Brotli compression. 2) Reduce HTTP requests - bundle files, CSS sprites, inline critical CSS, combine files. 3) Optimize loading - lazy load images\/components, code splitting, async\/defer scripts, preload critical resources. 4) Leverage caching - browser cache (cache headers), CDN, service workers, HTTP\/2 server push. 5) Optimize images - responsive images (srcset), modern formats, proper sizing, image CDN. 6) Performance budgets - limit bundle size, monitor metrics. 7) Database - indexes, query optimization, caching layer (Redis). 8) Frontend - virtual scrolling, debounce\/throttle, React.memo, avoid re-renders. 9) Network - HTTP\/2, CDN, reduce redirects. 10) Fonts - font-display: swap, subset fonts, variable fonts. Tools: Lighthouse, WebPageTest, Chrome DevTools, Webpack Bundle Analyzer.",
+    "competency":"['Performance', 'Optimization', 'Web Performance', 'Best Practices']",
+    "human_score":9,
+    "primary_category":"Performance"
+  },
+  {
+    "question":"Explain lazy loading and code splitting in web applications.",
+    "answer":"Lazy loading defers loading of non-critical resources until needed. Images: load when scrolled into view (Intersection Observer API), use loading='lazy' attribute. Components: load on demand (React.lazy, dynamic imports). Benefits: faster initial load, reduced bandwidth, better user experience. Code splitting breaks large bundle into smaller chunks loaded on demand. Techniques: route-based (load components for each route separately), component-based (lazy load heavy components), vendor splitting (separate node_modules). Implementation: Webpack\/Vite automatic splitting with dynamic import(), React.lazy(() => import('.\/Component')). Example: const Dashboard = lazy(() => import('.\/Dashboard')) with Suspense for loading state. Benefits: smaller initial bundle, parallel loading, cache individual chunks, load only needed code. Considerations: loading states, error boundaries, prefetch for predicted navigation. Modern build tools handle this automatically with proper imports.",
+    "competency":"['Performance', 'Lazy Loading', 'Code Splitting', 'Optimization']",
+    "human_score":9,
+    "primary_category":"Performance"
+  },
+  {
+    "question":"What is debouncing and throttling in JavaScript?",
+    "answer":"Debouncing and throttling control how often a function executes, improving performance. Debouncing delays execution until user stops triggering event for specified time. Example: search autocomplete - wait until user stops typing (300ms) before API call. Implementation: clear previous timer, set new timer. Use cases: search input, window resize, form validation. Throttling limits execution to once per time period, regardless of trigger frequency. Example: scroll handler - execute max once per 100ms. First or last call in period executes, others ignored. Use cases: scroll events, mouse move, button clicks (prevent double-submit). Lodash provides _.debounce() and _.throttle(). Debounce: final event matters (search). Throttle: regular sampling matters (scroll position). Both prevent performance issues from high-frequency events. Modern approach: use requestAnimationFrame for visual updates, debounce for API calls.",
+    "competency":"['JavaScript', 'Performance', 'Event Handling', 'Optimization']",
+    "human_score":9,
+    "primary_category":"JavaScript"
+  }
+]
