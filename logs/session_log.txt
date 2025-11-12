@@ -33,3 +33,52 @@ Answer    : local storage in oflidne device ,session storage is in online for ho
 Score     : 5.0
 Feedback  : ⚠️ Acceptable, but needs more detail. 🔍 Technical depth indicators: 0
 
+---- New Response ----
+Timestamp : 2025-10-26 15:56:46.980830
+Question  :  In node2vec, what does embedding represent topological similarity or nearness
+Answer    : fsfdasdf
+Score     : 0.0
+Feedback  : ❌ Poor answer. Needs significant improvement. 🔍 Technical depth indicators: 0
+
+---- New Response ----
+Timestamp : 2025-10-27 13:32:42.785532
+Question  :  difference between Vanishing gradient Vs Exploding gradient
+Answer    : i dont know
+Score     : 0.0
+Feedback  : ❌ Poor answer. Needs significant improvement. 🔍 Technical depth indicators: 0
+
+---- New Response ----
+Timestamp : 2025-10-27 13:34:21.667504
+Question  :  Why do segmentation CNNs typically have an encoder-decoder style / structure
+Answer    : clear
+Score     : 0.0
+Feedback  : ❌ Poor answer. Needs significant improvement. 🔍 Technical depth indicators: 0
+
+---- New Response ----
+Timestamp : 2025-10-27 13:36:03.495050
+Question  : What are React Hooks? Explain useState and useEffect.
+Answer    : React Hooks are use for transition in diffrent state ,use to dtain variable
+Score     : 4.0
+Feedback  : ⚠️ Acceptable, but needs more detail. 🔍 Technical depth indicators: 0
+
+---- New Response ----
+Timestamp : 2025-10-27 13:36:20.048952
+Question  : Explain the Node.js event-driven architecture.
+Answer    : Explain the Node.js event-driven architecture.
+Score     : 4.0
+Feedback  : ⚠️ Acceptable, but needs more detail. 🔍 Technical depth indicators: 0
+
+---- New Response ----
+Timestamp : 2025-10-27 13:36:49.393982
+Question  : Explain the concept of hoisting in JavaScript.
+Answer    : Explain the concept of hoisting in JavaScript.Explain the concept of hoisting in JavaScript.Explain the concept of hoisting in JavaScript.
+Score     : 5.0
+Feedback  : ⚠️ Acceptable, but needs more detail. 🔍 Technical depth indicators: 0
+
+---- New Response ----
+Timestamp : 2025-10-27 15:40:51.999752
+Question  : Explain the difference between local storage, session storage, and cookies.
+Answer    : local storage
+Score     : 0.13
+Feedback  : Overall: 0.13/10, Semantic: 0.04/10, Structure: 0.51/10
+

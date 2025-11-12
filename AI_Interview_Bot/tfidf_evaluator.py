@@ -223,14 +223,14 @@ class TFIDFAnswerEvaluator:
         else:
             return 0.2
     
-    def evaluate_answer(self, question, user_answer, reference_answer=None):
+    def evaluate_answer(self, question, user_answer, reference_answer):
         """
-        Evaluate user answer using TF-IDF and cosine similarity with multi-way comparison
+        Evaluate user answer using TF-IDF and cosine similarity with reference answer comparison
         
         Args:
             question (str): The interview question
             user_answer (str): User's answer
-            reference_answer (dict, optional): Reference answer dict with 'answer', 'human_score'
+            reference_answer (dict): Reference answer dict with 'answer', 'human_score' (REQUIRED)
             
         Returns:
             dict: Evaluation results with score, similarity, and detailed feedback
@@ -255,23 +255,18 @@ class TFIDFAnswerEvaluator:
                 }
             }
         
-        # Extract reference answer text if dict provided
-        ref_answer_text = None
-        ref_human_score = None
-        if reference_answer and isinstance(reference_answer, dict):
+        # Extract reference answer (REQUIRED)
+        if isinstance(reference_answer, dict):
             ref_answer_text = reference_answer.get('answer', '')
             ref_human_score = reference_answer.get('human_score', 0)
-        elif reference_answer and isinstance(reference_answer, str):
-            ref_answer_text = reference_answer
+        else:
+            ref_answer_text = str(reference_answer)
+            ref_human_score = 0
         
-        # Prepare documents for IDF calculation
-        documents = [question_tokens, answer_tokens]
+        reference_tokens = self.preprocess_text(ref_answer_text)
         
-        # Add reference answer if provided
-        reference_tokens = []
-        if ref_answer_text:
-            reference_tokens = self.preprocess_text(ref_answer_text)
-            documents.append(reference_tokens)
+        # Prepare documents for IDF calculation (always 3 documents now)
+        documents = [question_tokens, answer_tokens, reference_tokens]
         
         # Compute IDF for all documents
         idf_dict = self.compute_idf(documents)
@@ -286,24 +281,19 @@ class TFIDFAnswerEvaluator:
         # Calculate similarity with question (relevance check)
         question_relevance = self.cosine_similarity(question_tfidf, answer_tfidf)
         
-        # Multi-way comparison with reference answer if provided
-        reference_similarity = 0.0
-        keyword_overlap = 0.0
-        length_ratio = 1.0
+        # Multi-way comparison with reference answer
+        # 1. TF-IDF Cosine Similarity
+        ref_tf = self.compute_tf(reference_tokens)
+        ref_tfidf = self.compute_tfidf(ref_tf, idf_dict)
+        reference_similarity = self.cosine_similarity(answer_tfidf, ref_tfidf)
         
-        if reference_tokens:
-            # 1. TF-IDF Cosine Similarity
-            ref_tf = self.compute_tf(reference_tokens)
-            ref_tfidf = self.compute_tfidf(ref_tf, idf_dict)
-            reference_similarity = self.cosine_similarity(answer_tfidf, ref_tfidf)
-            
-            # 2. Keyword Overlap (Jaccard similarity)
-            keyword_overlap = self.compute_keyword_overlap(answer_tokens, reference_tokens)
-            
-            # 3. Length Ratio
-            answer_word_count = len(user_answer.split())
-            ref_word_count = len(ref_answer_text.split())
-            length_ratio = self.compute_length_ratio(answer_word_count, ref_word_count)
+        # 2. Keyword Overlap (Jaccard similarity)
+        keyword_overlap = self.compute_keyword_overlap(answer_tokens, reference_tokens)
+        
+        # 3. Length Ratio
+        answer_word_count = len(user_answer.split())
+        ref_word_count = len(ref_answer_text.split())
+        length_ratio = self.compute_length_ratio(answer_word_count, ref_word_count)
         
         # Scoring logic (0-10 scale)
         score = 0.0
@@ -330,27 +320,13 @@ class TFIDFAnswerEvaluator:
         relevance_score = min(3.0, question_relevance * 6.0)
         score += relevance_score
         
-        # 3. Reference comparison score (0-5 points) - ENHANCED
-        if reference_tokens:
-            # Combine multiple similarity metrics
-            # TF-IDF similarity: 50%, Keyword overlap: 30%, Length ratio: 20%
-            ref_score = (reference_similarity * 0.5 + keyword_overlap * 0.3 + length_ratio * 0.2) * 5.0
-            score += ref_score
-            
-            comparison_feedback = f"📊 vs Reference: TF-IDF={reference_similarity:.2f}, Keywords={keyword_overlap:.2f}, Length={length_ratio:.2f}"
-        else:
-            # Otherwise, check for technical depth indicators
-            technical_indicators = [
-                'because', 'therefore', 'however', 'example', 'such as',
-                'means', 'refers', 'involves', 'includes', 'used for',
-                'allows', 'enables', 'helps', 'improves', 'reduces'
-            ]
-            
-            answer_lower = user_answer.lower()
-            indicator_count = sum(1 for indicator in technical_indicators if indicator in answer_lower)
-            depth_score = min(5.0, indicator_count * 1.0)
-            score += depth_score
-            comparison_feedback = f"🔍 Technical depth indicators: {indicator_count}"
+        # 3. Reference comparison score (0-5 points)
+        # Combine multiple similarity metrics
+        # TF-IDF similarity: 50%, Keyword overlap: 30%, Length ratio: 20%
+        ref_score = (reference_similarity * 0.5 + keyword_overlap * 0.3 + length_ratio * 0.2) * 5.0
+        score += ref_score
+        
+        comparison_feedback = f"📊 vs Reference: TF-IDF={reference_similarity:.2f}, Keywords={keyword_overlap:.2f}, Length={length_ratio:.2f}"
         
         # Generate feedback
         if score >= 8.0:
@@ -373,10 +349,10 @@ class TFIDFAnswerEvaluator:
                 'length_penalty': length_penalty,
                 'length_score': round(length_score, 2),
                 'question_relevance': round(relevance_score, 2),
-                'reference_tfidf_similarity': round(reference_similarity, 3) if reference_tokens else 0.0,
-                'keyword_overlap': round(keyword_overlap, 3) if reference_tokens else 0.0,
-                'length_ratio': round(length_ratio, 3) if reference_tokens else 1.0,
-                'combined_ref_score': round(ref_score, 2) if reference_tokens else round(depth_score, 2),
+                'reference_tfidf_similarity': round(reference_similarity, 3),
+                'keyword_overlap': round(keyword_overlap, 3),
+                'length_ratio': round(length_ratio, 3),
+                'combined_ref_score': round(ref_score, 2),
                 'word_count': word_count,
                 'unique_terms': len(answer_tokens),
                 'has_reference': bool(reference_tokens),

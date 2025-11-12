@@ -11,94 +11,69 @@ import pandas as pd
 import os
 
 def get_interview_category():
-    """Select interview category with unique questions"""
+    """Select interview category - first choose technical vs non-technical"""
     print("\n" + "="*70)
-    print("INTERVIEW CATEGORIES")
+    print("STEP 1: SELECT INTERVIEW TYPE")
     print("="*70)
-    print("\n1. Technical Domains (All Tech Areas)")
-    print("   📊 Multiple domains: ML/DL, Web Development, and more")
-    print("   ✅ Best for: Technical interviews, concept review, coding skills")
-    print("   📝 You'll answer 3 different questions")
+    print("\n1. Technical Domain")
+    print("   � Technology-focused interview questions")
+    print("   � Web Development, Programming, etc.")
     
-    print("\n2. Behavioral Questions (STAR Format)")
-    print("   📊 9 unique behavioral questions across different roles")
-    print("   📚 1,470 expert answer examples with human scores")
-    print("   ✅ Best for: Learning STAR format, reference comparison")
-    print("   📝 You'll answer 3 different questions")
-    print("   🎯 Each answer compared against 100+ reference examples")
+    print("\n2. Non-Technical Domain")
+    print("   👥 Behavioral & Soft Skills questions")
+    print("   🎯 STAR format, Leadership, Communication, etc.")
     print("="*70)
 
+    # First ask technical vs non-technical
     while True:
-        choice = input("\nChoose category (1-2): ").strip()
-        if choice == "1":
-            return "technical"
-        elif choice == "2":
-            return "behavioral"
+        type_choice = input("\nAre you interested in Technical or Non-Technical domain? (1-2): ").strip()
+        if type_choice in ["1", "2"]:
+            break
         else:
             print("❌ Invalid choice. Please choose 1 or 2.")
+    
+    # Then ask specific domain
+    print("\n" + "="*70)
+    print("STEP 2: SELECT YOUR DOMAIN")
+    print("="*70)
+    
+    if type_choice == "1":
+        # Technical domains
+        print("\nAvailable Technical Domains:")
+        print("\n1. Web Development")
+        print("   📊 44 Q&A pairs covering HTML, CSS, JavaScript, React, Node.js")
+        print("   📚 Expert answers with human scores (8-10/10)")
+        print("   ✅ Best for: Frontend & Backend interview preparation")
+        print("   🎯 Each answer compared with expert reference answers")
+        print("="*70)
+        
+        while True:
+            domain_choice = input("\nWhich technical domain are you interested in? (1): ").strip()
+            if domain_choice == "1":
+                return "webdev"
+            else:
+                print("❌ Invalid choice. Please choose 1.")
+    
+    else:
+        # Non-technical domains
+        print("\nAvailable Non-Technical Domains:")
+        print("\n1. Behavioral Questions (STAR Format)")
+        print("   📊 9 unique behavioral questions across different roles")
+        print("   📚 1,470 expert answer examples with human scores")
+        print("   ✅ Best for: Learning STAR format, reference comparison")
+        print("   🎯 Each answer compared against 100+ reference examples")
+        print("="*70)
+        
+        while True:
+            domain_choice = input("\nWhich non-technical domain are you interested in? (1): ").strip()
+            if domain_choice == "1":
+                return "behavioral"
+            else:
+                print("❌ Invalid choice. Please choose 1.")
 
 def get_technical_subcategory():
-    """Select specific role/domain for technical questions"""
-    print("\n" + "="*70)
-    print("SELECT YOUR TARGET ROLE")
-    print("="*70)
-    
-    # Check what datasets are actually available
-    # Get the current script directory (AI_Interview_Bot folder)
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    kaggle_dir = os.path.join(script_dir, 'data', 'kaggle_datasets')
-    
-    available_datasets = {}
-    
-    # Check for Deep Learning/AI questions
-    dl_path = os.path.join(kaggle_dir, 'deeplearning_questions.csv')
-    if os.path.exists(dl_path):
-        available_datasets["1"] = {
-            "name": "AI/ML Engineer & Data Scientist",
-            "file": dl_path,
-            "description": "111 Deep Learning & ML questions",
-            "topics": "Neural Networks, NLP, CNN, RNN, GANs"
-        }
-    
-    # Check for Web Development questions
-    webdev_path = os.path.join(kaggle_dir, 'webdev_questions.csv')
-    if os.path.exists(webdev_path):
-        available_datasets["2"] = {
-            "name": "Full Stack Web Developer",
-            "file": webdev_path,
-            "description": "80 Web Development questions",
-            "topics": "HTML, CSS, JavaScript, React, Node.js, REST APIs, Databases"
-        }
-    
-    # Future: Add more datasets as they become available
-    # available_datasets["3"] = {"name": "Backend Engineer", "file": "backend_questions.csv", ...}
-    # available_datasets["4"] = {"name": "Python Developer", "file": "python_questions.csv", ...}
-    
-    if not available_datasets:
-        print("❌ No technical question datasets found!")
-        return None
-    
-    print("\n📊 AVAILABLE ROLES (based on datasets):\n")
-    for key, dataset in available_datasets.items():
-        print(f"{key}. {dataset['name']}")
-        print(f"   📚 {dataset['description']}")
-        print(f"   📝 Topics: {dataset['topics']}")
-        print()
-    
-    if len(available_datasets) == 1:
-        print("⚠️  Currently only 1 role dataset available")
-        print("💡 More role-specific datasets can be added in the future")
-    elif len(available_datasets) > 1:
-        print(f"✅ {len(available_datasets)} role-specific datasets available")
-    
-    print("="*70)
-    
-    while True:
-        choice = input(f"\nChoose role (1-{len(available_datasets)}): ").strip()
-        if choice in available_datasets:
-            return available_datasets[choice]
-        else:
-            print(f"❌ Invalid choice. Please choose 1-{len(available_datasets)}.")
+    """This function is no longer used - removed technical question-only datasets"""
+    return None
 
 def load_technical_questions(role_dataset):
     """Load technical questions from the selected role dataset"""
@@ -418,115 +393,99 @@ def run_interview_session():
     # Get category
     category = get_interview_category()
     
-    if category == "technical":
-        # Get role/dataset selection
-        role_dataset = get_technical_subcategory()
-        
-        if not role_dataset:
-            print("❌ No datasets available!")
-            return
-        
-        # Load technical questions for selected role
-        print(f"\n🔍 Loading questions for {role_dataset['name']}...")
-        questions = load_technical_questions(role_dataset)
-        
-        if not questions:
-            print(f"❌ No questions found for {role_dataset['name']}!")
-            return
-        
-        print(f"✅ Loaded {len(questions)} unique questions")
-        
-        # Select 3 random questions
-        NUM_QUESTIONS = 3
-        if len(questions) < NUM_QUESTIONS:
-            NUM_QUESTIONS = len(questions)
-            print(f"⚠️  Only {NUM_QUESTIONS} questions available")
-        
-        selected_questions = random.sample(questions, NUM_QUESTIONS)
-        
+    # Load Questions using smart dataset loader
+    print("\n🔍 Loading questions...")
+    loader = DatasetLoader()
+    
+    if category == "behavioral":
+        # Start behavioral interview
         print("\n" + "="*70)
-        print(f"Starting Interview: {role_dataset['name']}")
-        print(f"{NUM_QUESTIONS} technical questions")
-        print("="*70)
-        
-        all_scores = []
-        attempted = 0
-        
-        for i, question in enumerate(selected_questions):
-            print(f"\n{'='*70}")
-            print(f"Q{i+1}/{NUM_QUESTIONS}: {question['question']}")
-            print(f"{'='*70}")
-            if handle_technical_answer(question, tfidf_evaluator, all_scores, ref_loader):
-                attempted += 1
-        
-        # Show summary (no human comparison for technical)
-        show_session_summary(selected_questions, attempted, all_scores, [])
-        
-    else:  # behavioral
-        print("\n" + "="*70)
-        print("BEHAVIORAL INTERVIEW - GENERAL CATEGORY")
+        print("BEHAVIORAL INTERVIEW - STAR FORMAT")
         print("="*70)
         print("📊 9 unique behavioral questions from different roles")
         print("📚 1,470 expert answer examples with human scores")
         print("🎯 You'll answer 3 questions, compared against references")
         print("="*70)
-
-        # Load Questions using smart dataset loader
-        print("\n🔍 Loading behavioral questions...")
-        loader = DatasetLoader()
+        
         all_questions_data = loader.get_interview_questions_dataset(format='json')
-        
-        if not all_questions_data:
-            print("❌ No interview questions dataset found!")
-            return
-        
-        # Get all unique questions (1 per role = 9 total unique questions)
-        unique_questions_dict = {}
-        for q in all_questions_data:
-            question_text = q['question']
-            if question_text not in unique_questions_dict:
-                unique_questions_dict[question_text] = q
-        
-        unique_questions = list(unique_questions_dict.values())
-        print(f"✅ Loaded {len(unique_questions)} unique behavioral questions")
-        
-        # Select 3 random unique questions
-        NUM_QUESTIONS = 3
-        if len(unique_questions) < NUM_QUESTIONS:
-            NUM_QUESTIONS = len(unique_questions)
-        
-        selected_questions = random.sample(unique_questions, NUM_QUESTIONS)
-        
+    elif category == "webdev":
+        # Start web development interview
         print("\n" + "="*70)
-        print("BEHAVIORAL INTERVIEW SESSION")
+        print("WEB DEVELOPMENT INTERVIEW")
         print("="*70)
-        print(f"Questions: {NUM_QUESTIONS} unique behavioral questions")
-        print(f"Format: STAR (Situation, Task, Action, Result)")
-        print(f"Reference Answers: {len(all_questions_data)} total examples")
+        print("� 44 Q&A pairs covering modern web technologies")
+        print("📚 Expert answers scored 8-10/10")
+        print("🎯 You'll answer 3 questions, compared against expert answers")
         print("="*70)
         
-        all_scores = []
-        all_human_comparisons = []
-        attempted = 0
+        # Load webdev_interview_qa.csv
+        webdev_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'webdev_interview_qa.csv')
+        if os.path.exists(webdev_path):
+            df = pd.read_csv(webdev_path)
+            all_questions_data = []
+            for _, row in df.iterrows():
+                all_questions_data.append({
+                    'question': row['question'],
+                    'answer': row['answer'],
+                    'competency': row['competency'],
+                    'human_score': row['human_score']
+                })
+        else:
+            print("❌ Web development dataset not found!")
+            return
+    else:
+        print("❌ Invalid category!")
+        return
+    
+    if not all_questions_data:
+        print("❌ No interview questions dataset found!")
+        return
+    
+    # Get all unique questions
+    unique_questions_dict = {}
+    for q in all_questions_data:
+        question_text = q['question']
+        if question_text not in unique_questions_dict:
+            unique_questions_dict[question_text] = q
+    
+    unique_questions = list(unique_questions_dict.values())
+    print(f"✅ Loaded {len(unique_questions)} unique questions")
+    
+    # Select 3 random unique questions
+    NUM_QUESTIONS = 3
+    if len(unique_questions) < NUM_QUESTIONS:
+        NUM_QUESTIONS = len(unique_questions)
+    
+    selected_questions = random.sample(unique_questions, NUM_QUESTIONS)
+    
+    print("\n" + "="*70)
+    print(f"{category.upper()} INTERVIEW SESSION")
+    print("="*70)
+    print(f"Questions: {NUM_QUESTIONS} unique questions")
+    print(f"Reference Answers: {len(all_questions_data)} total examples")
+    print("="*70)
+    
+    all_scores = []
+    all_human_comparisons = []
+    attempted = 0
+    
+    # Ask each unique question
+    for i, question in enumerate(selected_questions, 1):
+        print(f"\n{'='*70}")
+        print(f"Q{i}/{NUM_QUESTIONS}: {question['question']}")
+        print(f"{'='*70}")
         
-        # Ask each unique question
-        for i, question in enumerate(selected_questions, 1):
-            print(f"\n{'='*70}")
-            print(f"Q{i}/{NUM_QUESTIONS}: {question['question']}")
-            print(f"Competencies: {question.get('competency', 'N/A')}")
-            print(f"{'='*70}")
-            
-            # Extract role from question for compatibility
-            role = "General"
-            if "role as a" in question['question']:
-                role_part = question['question'].split("role as a ")[-1]
-                role = role_part.strip()
-            
-            if handle_behavioral_answer(question, role, behavioral_evaluator, all_scores, all_human_comparisons, ref_loader):
-                attempted += 1
+        # Extract role from question for compatibility
+        role = "General"
+        if "role as a" in question['question']:
+            role_part = question['question'].split("role as a ")[-1]
+            role = role_part.strip()
+        
+        if handle_behavioral_answer(question, role, behavioral_evaluator, all_scores, all_human_comparisons, ref_loader):
+            attempted += 1
 
-        # Show final summary
-        show_session_summary(selected_questions, attempted, all_scores, all_human_comparisons)
+    # Show final summary
+    show_session_summary(selected_questions, attempted, all_scores, all_human_comparisons)
 
 if __name__ == "__main__":
     run_interview_session()
