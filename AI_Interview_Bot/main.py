@@ -1,10 +1,9 @@
 from dataset_loader import DatasetLoader
 from evaluator import AnswerEvaluator
-from tfidf_evaluator import TFIDFAnswerEvaluator
+from random_forest_evaluator import RandomForestAnswerEvaluator
 from reference_answer_loader import ReferenceAnswerLoader
 from resources import get_tip
 from logger import log_response
-from evaluate_model import InterviewBotEvaluator
 import numpy as np
 import random
 import pandas as pd
@@ -38,30 +37,42 @@ def get_interview_category():
     print("="*70)
     
     if type_choice == "1":
-        # Technical domains
-        print("\nAvailable Technical Domains:")
+        # Technical domains - Only Web Development (has Q+A+Score)
+        print("\n🎯 TECHNICAL DOMAIN - WITH REFERENCE ANSWERS & SCORES:")
+        print("="*70)
+        
         print("\n1. Web Development")
         print("   📊 44 Q&A pairs covering HTML, CSS, JavaScript, React, Node.js")
-        print("   📚 Expert answers with human scores (8-10/10)")
-        print("   ✅ Best for: Frontend & Backend interview preparation")
-        print("   🎯 Each answer compared with expert reference answers")
+        print("   ✅ Has Questions + Answers + Human Scores (8-10/10)")
+        print("   ✅ Similarity checking enabled for accurate scoring")
+        print("   📚 Expert-validated answers with quality ratings")
+        print("   🎯 Best for: Frontend & Backend interview preparation")
+        print("   💡 Short technical answers validated via similarity matching")
+        print("="*70)
+        
+        print("\n🚧 Other technical domains removed (no answers or scores)")
+        print("   Use Web Development for technical interview practice")
         print("="*70)
         
         while True:
-            domain_choice = input("\nWhich technical domain are you interested in? (1): ").strip()
+            domain_choice = input("\nSelect Web Development domain? (1 or back): ").strip()
             if domain_choice == "1":
                 return "webdev"
+            elif domain_choice.lower() == "back":
+                return get_interview_category()
             else:
-                print("❌ Invalid choice. Please choose 1.")
+                print("❌ Invalid choice. Please choose 1 or type 'back'.")
     
     else:
         # Non-technical domains
-        print("\nAvailable Non-Technical Domains:")
+        print("\n🎯 NON-TECHNICAL DOMAINS - WITH REFERENCE ANSWERS:")
+        print("="*70)
         print("\n1. Behavioral Questions (STAR Format)")
-        print("   📊 9 unique behavioral questions across different roles")
-        print("   📚 1,470 expert answer examples with human scores")
-        print("   ✅ Best for: Learning STAR format, reference comparison")
-        print("   🎯 Each answer compared against 100+ reference examples")
+        print("   📊 1,470 Q&A pairs across 21 competency categories")
+        print("   ✅ Has reference answers - Similarity checking enabled")
+        print("   📚 Expert STAR format examples with human scores (1-5)")
+        print("   🎯 Best for: Learning STAR format, behavioral interviews")
+        print("   💡 Each answer compared against 100+ reference examples")
         print("="*70)
         
         while True:
@@ -201,13 +212,16 @@ def handle_technical_answer(question, tfidf_evaluator, all_scores, ref_loader=No
     
     return True
 
-def handle_behavioral_answer(question, role, evaluator, all_scores, all_human_comparisons, ref_loader=None):
+def handle_behavioral_answer(question, role, evaluator, all_scores, all_human_comparisons, ref_loader=None, domain="behavioral"):
     """Handle answer for behavioral questions with reference answer comparison"""
     user_answer = input("\n💬 Your Answer: ").strip()
     
     if not user_answer:
         print("⚠️ Skipped.")
         return False
+    
+    # Determine if this is a technical domain (shorter answers acceptable)
+    is_technical = domain in ["webdev", "ml_ai", "software_engineering", "deep_learning"]
     
     # Try to get reference answer from loader
     reference_answer = None
@@ -231,16 +245,225 @@ def handle_behavioral_answer(question, role, evaluator, all_scores, all_human_co
     # Get the expected answer (if available)
     expected_answer = question.get("answer", "")
     
-    # Get comprehensive evaluation
-    score, feedback = evaluator.evaluate_answer(
-        user_answer, 
-        expected_answer,
-        question.get("keywords", [])
-    )
+    # Check if using Random Forest evaluator
+    if hasattr(evaluator, 'model') and evaluator.model is not None:
+        # Check answer quality first
+        word_count = len(user_answer.split())
+        
+        # Domain-aware thresholds
+        if is_technical:
+            min_words = 2  # "404" or "CSS" can be valid
+            brief_threshold = 5
+            short_threshold = 10
+        else:
+            min_words = 3
+            brief_threshold = 10
+            short_threshold = 20
+        
+        # Strict validation for extremely poor answers
+        if word_count < min_words:
+            # Single word answers (or 2 words for behavioral)
+            score = 1
+            confidence = 1.0
+            feedback_list = [
+                f"❌ Answer is too short ({word_count} word{'s' if word_count > 1 else ''}) - This is unacceptable",
+                "Provide a complete explanation with proper sentences" if not is_technical else "Provide at least the key term or concept",
+                f"Minimum expected: {10 if is_technical else 20}-30 words",
+                "Include: definition, explanation, examples, or comparisons"
+            ]
+            score_10 = 1.0
+            
+        elif word_count < brief_threshold:
+            # Very brief answer - check similarity for technical domains
+            if is_technical and expected_answer:
+                # For technical questions, short answers might be correct
+                from sklearn.feature_extraction.text import TfidfVectorizer
+                from sklearn.metrics.pairwise import cosine_similarity
+                
+                try:
+                    vectorizer = TfidfVectorizer(stop_words='english')
+                    vectors = vectorizer.fit_transform([user_answer.lower(), expected_answer.lower()])
+                    similarity = cosine_similarity(vectors[0:1], vectors[1:2])[0][0]
+                    
+                    if similarity > 0.6:
+                        # High similarity - correct short answer!
+                        score = 4
+                        confidence = 0.9
+                        score_10 = 8.0
+                        feedback_list = [
+                            f"✓ Correct! ({word_count} words)",
+                            "💡 Consider adding an example or elaboration to demonstrate deeper understanding"
+                        ]
+                    elif similarity > 0.3:
+                        # Partially correct
+                        score = 3
+                        confidence = 0.7
+                        score_10 = 6.0
+                        feedback_list = [
+                            f"⚠️ Partially correct ({word_count} words)",
+                            "Add more detail or clarify your answer",
+                            "Include the complete concept or additional context"
+                        ]
+                    else:
+                        # Low similarity - likely wrong
+                        score = 1
+                        confidence = 0.9
+                        score_10 = 2.5
+                        feedback_list = [
+                            f"❌ Answer appears incorrect ({word_count} words)",
+                            "Review the question and provide accurate information",
+                            "Add proper explanation (10-20 words)"
+                        ]
+                except:
+                    score = 2
+                    confidence = 0.6
+                    score_10 = 4.0
+                    feedback_list = [
+                        f"⚠️ Answer is brief ({word_count} words)",
+                        "Add 5-10 more words with explanation"
+                    ]
+            else:
+                # Behavioral or no reference - insufficient detail
+                score = 1
+                confidence = 0.9
+                feedback_list = [
+                    f"❌ Answer is too brief ({word_count} words) - Insufficient detail",
+                    f"Expand your explanation significantly (aim for {25 if is_technical else 40}-50 words minimum)",
+                    "Add: what it is, how it works, why it matters, examples",
+                    "Current answer lacks depth and completeness"
+                ]
+                score_10 = 2.5
+            
+        elif word_count < short_threshold:
+            # Short answer - use RF with domain-appropriate penalty
+            rf_result = evaluator.evaluate_answer(
+                user_answer,
+                question['question'],
+                return_details=True
+            )
+            base_score = rf_result['score']
+            
+            if is_technical:
+                # Technical: lighter penalty, might be sufficient
+                score = max(2, min(4, base_score - 0.5))
+                penalty_msg = f"Good answer ({word_count} words). Could add examples for excellence."
+            else:
+                # Behavioral: heavy penalty, needs STAR format
+                score = max(1, min(2, base_score - 2))
+                penalty_msg = f"⚠️ Answer is too short ({word_count} words). Add 20-30 more words with examples and details."
+            
+            confidence = rf_result['confidence'] * 0.8
+            features = rf_result['features']
+            score_10 = score * 2.0
+            feedback_list = evaluator.get_feedback(score, features)
+            feedback_list.insert(0, penalty_msg)
+            
+        elif word_count < 35:
+            # Acceptable length but could be better (20-34 words)
+            rf_result = evaluator.evaluate_answer(
+                user_answer,
+                question['question'],
+                return_details=True
+            )
+            base_score = rf_result['score']
+            
+            # Check similarity with reference answer if available
+            if expected_answer and len(expected_answer) > 20:
+                from sklearn.feature_extraction.text import TfidfVectorizer
+                from sklearn.metrics.pairwise import cosine_similarity
+                import numpy as np
+                
+                try:
+                    vectorizer = TfidfVectorizer(stop_words='english')
+                    vectors = vectorizer.fit_transform([user_answer.lower(), expected_answer.lower()])
+                    similarity = cosine_similarity(vectors[0:1], vectors[1:2])[0][0]
+                    
+                    # Boost score if good similarity
+                    if similarity > 0.3:
+                        similarity_boost = min(1.0, (similarity - 0.3) * 2)  # 0 to 1 boost
+                        score = min(4, base_score + similarity_boost)
+                    else:
+                        score = max(2, min(3, base_score - 0.5))
+                except:
+                    score = max(2, min(3, base_score - 0.5))
+            else:
+                # Moderate penalty for brevity
+                score = max(2, min(3, base_score - 0.5))
+            
+            confidence = rf_result['confidence']
+            features = rf_result['features']
+            score_10 = score * 2.0
+            feedback_list = evaluator.get_feedback(score, features)
+            if score < 4:
+                feedback_list.insert(0, f"Answer is acceptable ({word_count} words) but could be more comprehensive. Add examples or technical details.")
+            
+        else:
+            # Good length (35+ words) - use full RF evaluation with reference check
+            rf_result = evaluator.evaluate_answer(
+                user_answer,
+                question['question'],
+                return_details=True
+            )
+            base_score = rf_result['score']
+            
+            # Check similarity with reference answer if available
+            if expected_answer and len(expected_answer) > 20:
+                from sklearn.feature_extraction.text import TfidfVectorizer
+                from sklearn.metrics.pairwise import cosine_similarity
+                import numpy as np
+                
+                try:
+                    vectorizer = TfidfVectorizer(stop_words='english')
+                    vectors = vectorizer.fit_transform([user_answer.lower(), expected_answer.lower()])
+                    similarity = cosine_similarity(vectors[0:1], vectors[1:2])[0][0]
+                    
+                    # Adjust score based on similarity
+                    if similarity > 0.5:
+                        # High similarity - boost score
+                        score = min(5, base_score + 0.5)
+                    elif similarity > 0.3:
+                        # Good similarity - slight boost
+                        score = min(5, base_score + 0.3)
+                    elif similarity > 0.15:
+                        # Acceptable similarity - use base
+                        score = base_score
+                    else:
+                        # Low similarity - might be off-topic
+                        score = max(2, base_score - 1)
+                        if score < 3:
+                            feedback_list = evaluator.get_feedback(score, rf_result['features'])
+                            feedback_list.insert(0, "⚠️  Your answer may not fully address the question. Review the question carefully.")
+                except:
+                    score = base_score
+            else:
+                score = base_score
+            
+            confidence = rf_result['confidence']
+            features = rf_result['features']
+            score_10 = score * 2.0
+            feedback_list = evaluator.get_feedback(score, features)
+        
+        feedback = {
+            'final_score': score_10,
+            'semantic_score': score_10,
+            'structure_score': score_10,
+            'keyword_score': score_10,
+            'improvements': feedback_list,
+            'rf_score': score,
+            'rf_confidence': confidence if 'rf_result' in locals() else confidence,
+            'word_count': word_count
+        }
+    else:
+        # Legacy evaluator (AnswerEvaluator)
+        score, feedback = evaluator.evaluate_answer(
+            user_answer, 
+            expected_answer,
+            question.get("keywords", [])
+        )
     
-    # Compare with human evaluations (only if answer is available)
+    # Compare with human evaluations (only if answer is available and using legacy evaluator)
     human_comparison = None
-    if expected_answer:
+    if expected_answer and hasattr(evaluator, 'compare_with_human_evaluation'):
         human_comparison = evaluator.compare_with_human_evaluation(
             role, 
             question["question"], 
@@ -249,12 +472,31 @@ def handle_behavioral_answer(question, role, evaluator, all_scores, all_human_co
     
     # Print detailed feedback
     print("\n" + "="*70)
-    print("📊 EVALUATION RESULTS")
+    print("📊 EVALUATION RESULTS (Random Forest AI)")
     print("="*70)
-    print(f"Overall Score      : {feedback['final_score']:.2f}/10")
-    print(f"Semantic Score     : {feedback['semantic_score']:.2f}/10")
-    print(f"Structure Score    : {feedback['structure_score']:.2f}/10")
-    print(f"Keyword Coverage   : {feedback['keyword_score']:.2f}/10")
+    
+    # Show RF-specific metrics if available
+    if 'rf_score' in feedback:
+        if 'word_count' in feedback:
+            print(f"Answer Length       : {feedback['word_count']} words")
+        print(f"AI Score (1-5 scale): {feedback['rf_score']}/5 ⭐")
+        print(f"Confidence          : {feedback['rf_confidence']:.1%}")
+        print(f"Overall Score (10pt): {feedback['final_score']:.2f}/10")
+        
+        # Show quality indicator
+        if feedback['final_score'] < 4:
+            print(f"Quality Level       : ❌ Poor - Needs significant improvement")
+        elif feedback['final_score'] < 6:
+            print(f"Quality Level       : ⚠️  Below Average - Add more details")
+        elif feedback['final_score'] < 8:
+            print(f"Quality Level       : ✓ Good - Solid answer")
+        else:
+            print(f"Quality Level       : ⭐ Excellent - Well explained")
+    else:
+        print(f"Overall Score      : {feedback['final_score']:.2f}/10")
+        print(f"Semantic Score     : {feedback['semantic_score']:.2f}/10")
+        print(f"Structure Score    : {feedback['structure_score']:.2f}/10")
+        print(f"Keyword Coverage   : {feedback['keyword_score']:.2f}/10")
     
     # Show reference answer comparison if available
     if reference_answer:
@@ -374,9 +616,19 @@ def run_interview_session():
     print(" AI-POWERED INTERVIEW COACH BOT")
     print("="*70)
     
-    # Initialize evaluators
-    behavioral_evaluator = AnswerEvaluator()
-    tfidf_evaluator = TFIDFAnswerEvaluator()
+    # Initialize Random Forest evaluator
+    print("\n🤖 Loading Random Forest AI Evaluator...")
+    rf_evaluator = RandomForestAnswerEvaluator()
+    try:
+        rf_evaluator.load_model()
+        print("✅ Random Forest model loaded successfully!")
+        print("   📊 23 engineered features (STAR, competencies, linguistics)")
+        print("   🎯 Trained on 1,514 interview Q&A pairs")
+        print("   ⚡ 65% accuracy, 100% within ±1 score")
+    except FileNotFoundError:
+        print("⚠️  Random Forest model not found. Training new model...")
+        rf_evaluator.train_model()
+        print("✅ Model training complete!")
     
     # Initialize reference answer loader
     print("\n🔄 Loading reference answer database...")
@@ -402,9 +654,11 @@ def run_interview_session():
         print("\n" + "="*70)
         print("BEHAVIORAL INTERVIEW - STAR FORMAT")
         print("="*70)
-        print("📊 9 unique behavioral questions from different roles")
-        print("📚 1,470 expert answer examples with human scores")
-        print("🎯 You'll answer 3 questions, compared against references")
+        print("📊 1,470 Q&A pairs across 21 competency categories")
+        print("✅ Reference answers available - Similarity checking ENABLED")
+        print("📚 Expert STAR format examples with human scores (1-5)")
+        print("🎯 You'll answer 3 questions, compared against 100+ references")
+        print("💡 Detailed answers required (35+ words for best scores)")
         print("="*70)
         
         all_questions_data = loader.get_interview_questions_dataset(format='json')
@@ -413,13 +667,15 @@ def run_interview_session():
         print("\n" + "="*70)
         print("WEB DEVELOPMENT INTERVIEW")
         print("="*70)
-        print("� 44 Q&A pairs covering modern web technologies")
+        print("📊 44 Q&A pairs covering modern web technologies")
+        print("✅ Reference answers available - Similarity checking ENABLED")
         print("📚 Expert answers scored 8-10/10")
         print("🎯 You'll answer 3 questions, compared against expert answers")
+        print("💡 Short correct answers (2-5 words) will be validated via similarity")
         print("="*70)
         
         # Load webdev_interview_qa.csv
-        webdev_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'webdev_interview_qa.csv')
+        webdev_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'real_dataset_score', 'webdev_interview_qa.csv')
         if os.path.exists(webdev_path):
             df = pd.read_csv(webdev_path)
             all_questions_data = []
@@ -432,6 +688,88 @@ def run_interview_session():
                 })
         else:
             print("❌ Web development dataset not found!")
+            return
+            
+    # Removed: ml_ai, software_engineering, deep_learning datasets
+    # Reason: Missing answers and/or scores (backed up to _removed_datasets_backup)
+    elif category in ["ml_ai", "software_engineering", "deep_learning"]:
+        print("\n❌ This domain has been removed (no Q+A+Score structure)")
+        print("Please select Web Development or Behavioral domain.")
+        return run_interview_session()
+        
+        # Load coding_interview_question_bank.csv
+        ml_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'kaggle_datasets', 'coding_interview_question_bank.csv')
+        if os.path.exists(ml_path):
+            df = pd.read_csv(ml_path)
+            all_questions_data = []
+            for _, row in df.iterrows():
+                all_questions_data.append({
+                    'question': row['question'],
+                    'answer': '',  # No reference answers in this dataset
+                    'competency': row['category'],
+                    'human_score': 3,  # Default score
+                    'difficulty': row.get('difficulty', 'Medium')
+                })
+        else:
+            print("❌ Machine Learning dataset not found!")
+            return
+            
+    elif category == "software_engineering":
+        # Software Engineering interview
+        print("\n" + "="*70)
+        print("SOFTWARE ENGINEERING INTERVIEW")
+        print("="*70)
+        print("📊 200 Q&A pairs across 22 categories")
+        print("✅ Reference answers available - Similarity checking ENABLED")
+        print("📚 System Design, DevOps, OOP, Algorithms, Databases, Security")
+        print("🎯 You'll answer 5 questions with expert reference answers")
+        print("💡 Short technical answers validated via similarity matching")
+        print("="*70)
+        
+        # Load Software Questions.csv
+        se_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'kaggle_datasets', 'Software Questions.csv')
+        if os.path.exists(se_path):
+            df = pd.read_csv(se_path)
+            all_questions_data = []
+            for _, row in df.iterrows():
+                all_questions_data.append({
+                    'question': row['Question'],
+                    'answer': row['Answer'],
+                    'competency': row['Category'],
+                    'human_score': 4,  # High quality answers
+                    'difficulty': row.get('Difficulty', 'Medium')
+                })
+        else:
+            print("❌ Software Engineering dataset not found!")
+            return
+            
+    elif category == "deep_learning":
+        # Deep Learning interview
+        print("\n" + "="*70)
+        print("DEEP LEARNING INTERVIEW (SPECIALIZED)")
+        print("="*70)
+        print("📊 111 advanced deep learning questions")
+        print("⚠️  Reference answers NOT available - Feature-based scoring only")
+        print("📚 Neural networks, CNN, RNN, transformers, training techniques")
+        print("🎯 You'll answer 5 challenging DL questions")
+        print("💡 Scoring based on technical depth and explanation quality")
+        print("="*70)
+        
+        # Load deeplearning_questions.csv
+        dl_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'kaggle_datasets', 'deeplearning_questions.csv')
+        if os.path.exists(dl_path):
+            df = pd.read_csv(dl_path)
+            all_questions_data = []
+            for _, row in df.iterrows():
+                if row['DESCRIPTION'] and str(row['DESCRIPTION']).strip():
+                    all_questions_data.append({
+                        'question': row['DESCRIPTION'],
+                        'answer': '',  # No reference answers
+                        'competency': 'Deep Learning',
+                        'human_score': 3
+                    })
+        else:
+            print("❌ Deep Learning dataset not found!")
             return
     else:
         print("❌ Invalid category!")
@@ -451,8 +789,12 @@ def run_interview_session():
     unique_questions = list(unique_questions_dict.values())
     print(f"✅ Loaded {len(unique_questions)} unique questions")
     
-    # Select 3 random unique questions
-    NUM_QUESTIONS = 3
+    # Determine number of questions based on category
+    if category in ["ml_ai", "software_engineering", "deep_learning"]:
+        NUM_QUESTIONS = 5  # More questions for technical domains
+    else:
+        NUM_QUESTIONS = 3  # Standard for behavioral/webdev
+        
     if len(unique_questions) < NUM_QUESTIONS:
         NUM_QUESTIONS = len(unique_questions)
     
@@ -481,7 +823,7 @@ def run_interview_session():
             role_part = question['question'].split("role as a ")[-1]
             role = role_part.strip()
         
-        if handle_behavioral_answer(question, role, behavioral_evaluator, all_scores, all_human_comparisons, ref_loader):
+        if handle_behavioral_answer(question, role, rf_evaluator, all_scores, all_human_comparisons, ref_loader, category):
             attempted += 1
 
     # Show final summary

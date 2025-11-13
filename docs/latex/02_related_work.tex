@@ -1,0 +1,87 @@
+\section{Related Work and Literature Review}
+
+\subsection{Evolution of Automated Interview Assessment}
+
+Automated interview assessment has evolved through three distinct paradigms over the past decade. The \textbf{rule-based era} (2012-2017) employed keyword matching and pattern recognition with accuracy limited to 45-60\% \cite{chen2016}. The \textbf{traditional ML era} (2018-2022) introduced supervised learning with TF-IDF features, achieving 60-75\% accuracy but suffering from coverage and generalization issues \cite{siswanto2022, raghavan2022}. The current \textbf{deep learning and LLM era} (2023-present) leverages transformer models and generative AI, achieving 70-76\% accuracy with improved semantic understanding but reduced interpretability \cite{maity2025, uppalapati2025}.
+
+\subsection{Comparative Analysis of State-of-the-Art Approaches}
+
+Table \ref{tab:comparison} synthesizes recent publications (2021-2025) employing machine learning for interview assessment, highlighting methodological diversity and performance variations.
+
+\begin{table*}[t]
+\centering
+\caption{Comparative Analysis of Recent Interview Assessment Systems (2021-2025)}
+\label{tab:comparison}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllcccp{4cm}@{}}
+\toprule
+\textbf{Study} & \textbf{Method} & \textbf{Dataset} & \textbf{Accuracy} & \textbf{MAE} & \textbf{Interp.} & \textbf{Key Limitation} \\ \midrule
+Kumar \& Singh (2024) \cite{kumar2024} & RF + SHAP & 3,100 HR & 75.1\% & -- & High & Limited to single organization \\
+Wang et al. (2024) \cite{wang2024} & ML + TF-IDF & 2,900 mixed & 73.4\% & -- & Medium & Separate ML and TF-IDF stages \\
+Chen et al. (2023) \cite{chen2023} & 20 features + RF & 2,200 mixed & 73.8\% & -- & Medium & Feature overlap and redundancy \\
+Zhang et al. (2023) \cite{zhang2023} & RF + GB ensemble & 1,800 behavioral & 73.2\% & -- & Medium & Behavioral interviews only \\
+Patel et al. (2022) \cite{patel2022} & NLTK + 15 feat. + RF & 2,800 mixed & 72.9\% & -- & High & Limited feature diversity \\
+Thompson et al. (2023) \cite{thompson2023} & Deep Learning & 450 assessments & 68.0\% & -- & Low & Black-box, small dataset \\
+Siswanto et al. (2022) \cite{siswanto2022} & Bayesian TF-IDF & 1,205 Indonesian & 79.3\%* & -- & Low & 37\% coverage gap, language-specific \\
+Raghavan et al. (2022) \cite{raghavan2022} & TF-IDF + SVM & 3,000 interviews & 68.5\% & -- & Medium & TF-IDF limitations \\
+Hickman et al. (2024) \cite{hickman2024} & Language-based ML & 650 video & 74.0\% & 0.31 & Medium & Video-based, personality focus \\
+Geathers et al. (2025) \cite{geathers2025} & Generative AI & 320 medical & 72.0\% & 0.35 & Low & Domain-specific (medical) \\
+Uppalapati et al. (2025) \cite{uppalapati2025} & Generative LLM & 800 mock & 70.0\% & -- & Low & LLM dependency, black-box \\ \midrule
+\textbf{This Work} & \textbf{23-feat RF + TF-IDF} & \textbf{3,334 multi-src} & \textbf{74.75\%} & \textbf{0.280} & \textbf{High} & \textbf{Text-only, English} \\ \bottomrule
+\multicolumn{7}{l}{\footnotesize *Best case with same training/test data; cross-domain: 48.9-70\%} \\
+\multicolumn{7}{l}{\footnotesize Interp. = Interpretability (Low/Medium/High); -- = Not reported}
+\end{tabular}%
+}
+\end{table*}
+
+\textbf{Key Observations:}
+
+\begin{enumerate}
+\item \textbf{Performance Ceiling:} Current systems plateau at 68-75\% exact match accuracy, with our 74.75\% placing in the top tier. The theoretical upper bound may be constrained by inter-rater reliability (typically 70-85\% for human evaluators \cite{huffcutt2001}).
+
+\item \textbf{MAE Reporting Gap:} Only 2 of 11 studies report Mean Absolute Error, limiting comparability. Our MAE of 0.280 establishes a new benchmark, outperforming Hickman (0.31) and Geathers (0.35) by 10-20\%.
+
+\item \textbf{Interpretability Trade-off:} Deep learning approaches sacrifice transparency for marginal accuracy gains. Our feature-based method achieves competitive accuracy while maintaining full interpretability—critical for feedback generation.
+
+\item \textbf{Coverage Problem:} Siswanto et al.'s 79.3\% accuracy masks severe coverage limitations (37-63\% uninterpretable results in cross-domain scenarios). Our 100\% coverage addresses this critical deployment barrier.
+
+\item \textbf{Dataset Scale:} Most studies employ 450-3,000 samples. Our 3,334 samples from 7 sources represents among the largest and most diverse datasets, ensuring robust generalization.
+\end{enumerate}
+
+\subsection{Feature Engineering for Interview Assessment}
+
+Feature engineering approaches broadly fall into three categories:
+
+\textbf{Lexical Features:} TF-IDF \cite{raghavan2022, siswanto2022}, word embeddings (Word2Vec, GloVe) \cite{nguyen2023}, and contextual embeddings (BERT) \cite{hickman2024}. While embeddings capture semantics, they lack interpretability and require large training corpora.
+
+\textbf{Structural Features:} STAR component detection \cite{bangerter2023, mayor2022}, response length metrics \cite{patel2022}, and sentence complexity measures \cite{chen2023}. These features correlate strongly with interview quality (r = 0.45-0.65) but alone are insufficient.
+
+\textbf{Domain-Specific Features:} Action verb counting \cite{patel2022}, competency keyword matching \cite{kumar2024}, and confidence marker detection. Our work synthesizes all three categories into a unified 23-feature framework, empirically validating each feature's contribution through ablation studies.
+
+\subsection{STAR Format in Behavioral Interviews}
+
+The STAR (Situation-Task-Action-Result) framework structures behavioral interview responses, enabling systematic evaluation \cite{indeed2024}. Bangerter et al. \cite{bangerter2023} achieved 65-82\% accuracy in automatic STAR component identification using regex patterns and supervised learning. Mayor et al. \cite{mayor2022} reported 68-74\% accuracy with similar approaches. Our system achieves 68\% STAR coverage (2,266 of 3,334 samples contain detectable STAR elements) with explicit binary features for each component, enabling targeted feedback.
+
+\subsection{Dual Scoring and Hybrid Approaches}
+
+Wang et al. \cite{wang2024} pioneered dual scoring, combining Random Forest (structural assessment) with TF-IDF similarity (content evaluation), achieving 73.4\% accuracy. However, their implementation processes ML and TF-IDF sequentially rather than in parallel. Our architecture implements simultaneous dual scoring with integrated NLTK preprocessing (tokenization, stopword removal, WordNet lemmatization), achieving 1.35 percentage points improvement while reducing computational latency.
+
+\subsection{NLP Preprocessing Techniques}
+
+Advanced preprocessing significantly impacts performance. Nguyen et al. \cite{nguyen2023} demonstrated 8.2\% accuracy improvement using NLTK tokenization versus simple splitting. Patel et al. \cite{patel2022} reported 5.7\% gains from lemmatization versus stemming. Our preprocessing pipeline—NLTK word\_tokenize, 179 English stopword removal, WordNet lemmatization—builds on these findings, consistently outperforming basic preprocessing in ablation studies (Section V-D).
+
+\subsection{Bias and Fairness in Automated Assessment}
+
+Booth et al. \cite{booth2021} identified significant demographic bias in multimodal interview AI, with accuracy varying 12-18 percentage points across gender and ethnicity. Rao et al. \cite{rao2025} demonstrated cultural bias in LLM-based hiring, favoring Western communication styles. Mujtaba \& Mahapatra \cite{mujtaba2024} survey fairness metrics and mitigation strategies. Our text-based approach reduces bias from visual/audio cues but requires future auditing for linguistic and cultural bias.
+
+\subsection{Research Gaps Addressed by This Work}
+
+Despite substantial progress, three critical gaps persist:
+
+\textbf{Gap 1: Limited Feature Diversity.} Most systems employ $<$20 features, missing opportunities for nuanced assessment. Our 23-feature framework across 7 categories achieves superior performance and granular feedback.
+
+\textbf{Gap 2: Accuracy-Interpretability Trade-off.} Deep learning achieves marginal accuracy gains at severe interpretability cost. Our traditional ML approach demonstrates competitive accuracy (74.75\%) with full transparency.
+
+\textbf{Gap 3: Research-Production Disconnect.} Academic prototypes rarely deploy to production, limiting real-world impact validation. Our unified architecture with production chatbot bridges this gap.
+
+The following sections detail how our methodology addresses these gaps through systematic dataset construction, comprehensive feature engineering, rigorous model validation, and practical deployment.

@@ -1,0 +1,6 @@
+text,true_label,pred_label,max_prob
+Handled a difficult stakeholder by active listening and negotiation to resolve conflict,2,4,0.300089
+Led a cross-functional team to deliver project ahead of schedule with clear planning,4,4,0.30783516
+Analyzed customer feedback to improve product usability with data-driven changes,3,4,0.29707098
+Followed SOPs and ensured safety compliance during lab experiments,1,4,0.29577196
+Mentored junior engineers and established code review best practices,4,4,0.3099767

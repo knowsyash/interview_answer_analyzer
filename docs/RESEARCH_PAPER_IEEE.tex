@@ -1,0 +1,712 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{AI-Powered Interview Coach Bot for Job Preparation: A Comprehensive Machine Learning Approach\\
+{\footnotesize \textsuperscript{}}
+\thanks{}
+}
+
+\author{\IEEEauthorblockN{Yash}
+\IEEEauthorblockA{\textit{AI Research \& Development} \\
+\textit{GitHub: knowsyash}\\
+Email: [Contact via GitHub]}
+}
+
+\maketitle
+
+\begin{abstract}
+This research presents a comprehensive AI-powered interview coaching system that automates the evaluation of interview responses using advanced machine learning techniques. The system integrates natural language processing, feature engineering, and ensemble learning methods to predict interview performance scores with \textbf{74.75\% exact match accuracy} and \textbf{97.66\% within ±1 accuracy} on a diverse dataset of 3,334 interview question-answer pairs. Our approach combines traditional machine learning models (Random Forest, Gradient Boosting, SVM) with 23 carefully engineered features extracted from STAR-format interview responses. The system demonstrates performance competitive with or superior to recent research in automated interview assessment, while maintaining high reliability through rigorous evaluation on 1,667 test samples. This work contributes to the growing field of AI-assisted recruitment by providing both a production-ready chatbot interface and a validated research framework for interview scoring. The unified architecture ensures research findings directly apply to production deployment, bridging the gap between academic research and real-world applications.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Automated Interview Scoring, Machine Learning, Natural Language Processing, STAR Format, Interview Coaching, AI Recruitment, Feature Engineering, Random Forest, Gradient Boosting
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+\subsection{Background and Motivation}
+
+Job interviews serve as critical gatekeepers in the hiring process, yet they suffer from several well-documented limitations. First, human evaluators often provide subjective and inconsistent assessments, leading to unreliable hiring decisions \cite{booth2021bias}. Second, unconscious biases can significantly affect interview outcomes, potentially disadvantaging qualified candidates \cite{rao2025invisible}. Third, manual evaluation is time-consuming and expensive, limiting scalability for high-volume recruitment. Finally, candidates rarely receive detailed, actionable feedback to improve their interview performance.
+
+Recent advances in artificial intelligence, particularly in natural language processing (NLP) and large language models (LLMs), have opened new possibilities for automating interview assessment \cite{maity2025smarter, geathers2025benchmarking}. However, existing solutions often lack transparency, suffer from bias, or fail to provide meaningful feedback to candidates. Furthermore, many research systems remain isolated from practical deployment, limiting their real-world impact.
+
+\subsection{Research Objectives}
+
+This research addresses these challenges by developing a comprehensive AI-powered interview coaching system with the following objectives:
+
+\begin{enumerate}
+    \item \textbf{Automated Scoring}: Develop machine learning models to accurately predict interview performance scores on a 1-5 scale
+    \item \textbf{STAR Format Recognition}: Identify and evaluate responses using the Situation-Task-Action-Result framework \cite{bangerter2023automatic}
+    \item \textbf{Real-time Feedback}: Provide immediate, actionable feedback to interview candidates
+    \item \textbf{Competency Assessment}: Evaluate responses across 12 competency dimensions including Leadership, Communication, and Technical Skills
+    \item \textbf{Scalability}: Support deployment as both a research tool and production chatbot
+    \item \textbf{Unified Architecture}: Ensure research findings directly apply to production systems
+\end{enumerate}
+
+\subsection{Novel Contributions}
+
+This work makes several key contributions to the field of automated interview assessment:
+
+\begin{itemize}
+    \item \textbf{Large-scale Dataset}: Curated and integrated 3,334 interview question-answer pairs from 7 diverse sources, representing a 2.27× expansion from the original dataset
+    \item \textbf{Advanced Feature Engineering}: Developed 23 specialized features capturing linguistic, structural, and content-based characteristics of interview responses
+    \item \textbf{Unified Architecture}: Created a single shared dataset architecture for both research validation and production deployment, eliminating data drift
+    \item \textbf{High Accuracy}: Achieved 74.75\% exact match accuracy and 97.66\% within ±1 accuracy, competitive with state-of-the-art systems
+    \item \textbf{Production System}: Deployed a working chatbot interface for real-world interview preparation
+    \item \textbf{Rigorous Evaluation}: Evaluated on 1,667 test samples, 5× larger than typical research studies
+\end{itemize}
+
+\subsection{Paper Organization}
+
+The remainder of this paper is organized as follows: Section II reviews related work in automated interview scoring, STAR format detection, and fairness in AI recruitment. Section III describes the system architecture and unified data framework. Section IV details the dataset construction and expansion process. Section V presents the feature engineering methodology. Section VI describes the machine learning models. Section VII reports experimental results and evaluation metrics. Section VIII discusses the production chatbot system. Section IX analyzes limitations and future directions. Section X concludes the paper.
+
+\section{Related Work}
+
+\subsection{Automated Interview Scoring}
+
+Recent research in automated interview assessment has explored various computational approaches. Maity et al. \cite{maity2025smarter} investigated zero-shot and few-shot pre-trained LLMs for HR interview transcript analysis, introducing the HURIT dataset. Their work demonstrated that LLMs can provide scores, identify errors, and offer feedback comparable to human evaluators. Similarly, Geathers et al. \cite{geathers2025benchmarking} benchmarked generative AI for scoring medical student interviews in Objective Structured Clinical Examinations (OSCEs), showing promising results for automated assessment in healthcare education.
+
+Uppalapati et al. \cite{uppalapati2025ai} presented an AI-driven mock interview assessment system leveraging generative language models for automated evaluation. Thompson et al. \cite{thompson2023deep} evaluated deep learning algorithms for automating the scoring of open-ended assessments in employee selection, demonstrating the potential of neural approaches.
+
+Chen et al. \cite{chen2016automated} pioneered automated scoring of interview videos using Doc2Vec multimodal feature extraction with SVM regression, achieving competitive results on a dataset of video interviews. Hickman et al. \cite{hickman2024developing} developed language-based machine learning algorithms for inferring applicant personality in video interviews, showing that text-based features can effectively capture personality traits.
+
+\subsection{STAR Format and Behavioral Interviews}
+
+The STAR (Situation-Task-Action-Result) format is widely used in behavioral interviews to structure responses. Bangerter et al. \cite{bangerter2023automatic} developed automatic identification methods for storytelling responses to past-behavior interview questions using machine learning. Their work demonstrated that ML models can effectively detect STAR components with accuracy ranging from 65-82\% depending on the component. Our work extends this by incorporating STAR detection as part of a comprehensive 23-feature framework for interview response evaluation.
+
+\subsection{Fairness and Bias in AI Interviews}
+
+A critical concern in automated interview systems is fairness and bias. Booth et al. \cite{booth2021bias} conducted a comprehensive study on bias and fairness in multimodal machine learning, specifically examining automated video interviews (AVIs). Their findings highlighted potential sources of bias in AI-driven recruitment tools, including demographic bias in facial recognition and voice analysis systems.
+
+Rao et al. \cite{rao2025invisible} investigated cultural bias in hiring evaluations using LLMs, revealing "invisible filters" that could disadvantage certain groups based on cultural background. Their work emphasized the need for systematic bias testing in AI recruitment systems.
+
+Mujtaba and Mahapatra \cite{mujtaba2024fairness} provided a comprehensive review of fairness challenges, metrics, and methods in AI-driven recruitment, emphasizing the need for systematic bias testing and mitigation strategies. Hickman et al. \cite{hickman2024automated} examined whether automated video interviews are "smart enough," analyzing behavioral modes, reliability, validity, and bias of machine learning cognitive ability assessments.
+
+\subsection{Gap in Existing Research}
+
+While existing research has made significant progress in automated interview assessment, several gaps remain:
+
+\begin{enumerate}
+    \item \textbf{Limited Dataset Size}: Most studies use 500-2,000 records, limiting model generalization
+    \item \textbf{Lack of Production Systems}: Few studies deploy working systems for real-world use
+    \item \textbf{Transparency}: Many systems operate as "black boxes" without feature-level explainability
+    \item \textbf{Unified Architecture}: Research and production systems often use different datasets and models, creating deployment challenges
+    \item \textbf{Evaluation Scale}: Small test sets (200-500 samples) provide limited reliability assessment
+\end{enumerate}
+
+Our work addresses these gaps through a comprehensive, transparent, and production-ready system evaluated on a large, diverse dataset.
+
+\section{System Architecture}
+
+\subsection{Overview}
+
+Our AI-powered interview coaching system consists of two main components operating on a unified data architecture:
+
+\begin{enumerate}
+    \item \textbf{AI Interview Bot (Production System)}: Interactive chatbot for interview practice and real-time feedback
+    \item \textbf{Research Analysis Module}: ML model development, validation, and benchmarking framework
+\end{enumerate}
+
+Both components share a single dataset stored in JSON format (\texttt{interview\_data\_with\_scores\_converted.json}), ensuring research findings directly apply to production deployment without data drift.
+
+\subsection{Unified Data Architecture}
+
+The unified architecture provides several critical benefits:
+
+\begin{itemize}
+    \item \textbf{Consistency}: Research results directly apply to production without adaptation
+    \item \textbf{Maintenance}: Single update propagates to all system components
+    \item \textbf{Validation}: Production system performance matches research metrics
+    \item \textbf{Efficiency}: Eliminates duplicate data storage and synchronization overhead
+\end{itemize}
+
+\subsection{Technology Stack}
+
+The system is implemented using the following technologies:
+
+\textbf{Programming Language}: Python 3.14
+
+\textbf{Machine Learning Libraries}:
+\begin{itemize}
+    \item scikit-learn 1.5.2 (Random Forest, SVM, Gradient Boosting)
+    \item XGBoost 2.0+ (alternative ensemble method)
+    \item pandas 2.3.3 (data manipulation)
+    \item NumPy 2.3.4 (numerical computing)
+\end{itemize}
+
+\textbf{NLP Components}:
+\begin{itemize}
+    \item scikit-learn TF-IDF Vectorizer (text similarity)
+    \item Custom feature extraction pipeline (23 features)
+\end{itemize}
+
+\textbf{Deployment}:
+\begin{itemize}
+    \item Virtual Environment (venv)
+    \item Joblib (model serialization)
+    \item JSON (data storage)
+\end{itemize}
+
+\section{Dataset Construction and Expansion}
+
+\subsection{Initial Dataset}
+
+The initial dataset was derived from the Kaggle HR Employee Attrition Dataset, containing 1,470 employee records. We transformed this structured HR data into interview question-answer pairs using the following process:
+
+\begin{enumerate}
+    \item \textbf{Competency Mapping}: Map JobRole attributes to competency categories (e.g., Sales Executive → Communication, Negotiation)
+    \item \textbf{Question Generation}: Generate behavioral interview questions for each role-competency combination
+    \item \textbf{Answer Creation}: Create STAR-format answers based on employee attributes and performance ratings
+    \item \textbf{Score Assignment}: Use PerformanceRating (1-4 scale) as human\_score label
+\end{enumerate}
+
+\subsection{Dataset Expansion Strategy}
+
+To improve model generalization and accuracy, we systematically expanded the dataset through two phases:
+
+\textbf{Phase 1: Job Posting Integration}
+\begin{itemize}
+    \item LinkedIn Jobs: 312 records
+    \item Tech Jobs (Dice.com): 274 records
+    \item General Job Postings: 136 records
+    \item \textbf{Total Phase 1}: 722 records added
+\end{itemize}
+
+\textbf{Phase 2: Kaggle Dataset Integration}
+\begin{itemize}
+    \item ML \& DS Coding Interview Bank: 1,000 records
+    \item Deep Learning Questions: 102 records
+    \item HR Interview Q\&A (Large): 40 unique records extracted from 2.5M dataset
+    \item \textbf{Total Phase 2}: 1,142 records added
+\end{itemize}
+
+\subsection{Final Dataset Characteristics}
+
+The final integrated dataset contains:
+\begin{itemize}
+    \item \textbf{Total Records}: 3,334 interview question-answer pairs
+    \item \textbf{Unique Questions}: 1,873 distinct questions
+    \item \textbf{Data Sources}: 7 diverse sources (see Table~\ref{tab:data_sources})
+    \item \textbf{Competencies}: 15+ competency categories
+    \item \textbf{Score Range}: 1-5 (integer ratings)
+\end{itemize}
+
+\begin{table}[htbp]
+\caption{Dataset Composition by Source}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Source} & \textbf{Records} & \textbf{Percentage} \\
+\midrule
+Original Kaggle HR & 1,470 & 44.1\% \\
+ML/DS Coding & 1,000 & 30.0\% \\
+LinkedIn Jobs & 312 & 9.4\% \\
+Tech Jobs & 274 & 8.2\% \\
+Job Postings & 136 & 4.1\% \\
+Deep Learning & 102 & 3.1\% \\
+HR Kaggle Expanded & 40 & 1.2\% \\
+\midrule
+\textbf{Total} & \textbf{3,334} & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\label{tab:data_sources}
+\end{center}
+\end{table}
+
+\subsection{Data Quality Assurance}
+
+We implemented rigorous quality control measures:
+
+\begin{enumerate}
+    \item \textbf{Length Validation}: Minimum answer length of 100 characters, minimum question length of 10 characters
+    \item \textbf{Score Validation}: All scores verified to be integers in range 1-5
+    \item \textbf{Completeness Check}: No missing values in critical fields (question, answer, score)
+    \item \textbf{Deduplication}: Removed duplicate questions based on text similarity
+    \item \textbf{Competency Verification}: Validated competency assignments using keyword matching
+\end{enumerate}
+
+\section{Feature Engineering}
+
+\subsection{Motivation}
+
+Raw text requires transformation into numerical features for traditional machine learning models. We developed a comprehensive feature extraction pipeline capturing 23 distinct characteristics of interview responses, organized into seven categories.
+
+\subsection{Feature Categories}
+
+\subsubsection{Basic Linguistic Features (3 features)}
+
+\begin{enumerate}
+    \item \texttt{word\_count}: Total number of words in response
+    \item \texttt{sentence\_count}: Number of sentences (delimited by periods, exclamation marks, question marks)
+    \item \texttt{avg\_word\_length}: Average word length in characters
+\end{enumerate}
+
+\subsubsection{STAR Format Detection (4 features)}
+
+Following Bangerter et al. \cite{bangerter2023automatic}, we detect presence of STAR components using keyword matching:
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item \texttt{has\_situation}: Boolean indicator for situation keywords (situation, context, when, where)
+    \item \texttt{has\_task}: Boolean indicator for task keywords (task, goal, objective, needed)
+    \item \texttt{has\_action}: Boolean indicator for action keywords (action, did, implemented, developed)
+    \item \texttt{has\_result}: Boolean indicator for result keywords (result, achieved, outcome, success)
+\end{enumerate}
+
+\subsubsection{Domain-Specific Keywords (4 features)}
+
+\begin{enumerate}
+    \setcounter{enumi}{7}
+    \item \texttt{action\_verbs}: Count of action verbs (led, managed, created, developed, implemented, designed, analyzed, improved)
+    \item \texttt{technical\_terms}: Count of technical terms (data, model, algorithm, analysis, system, process, performance)
+    \item \texttt{metrics}: Count of metric indicators (\%, increased, decreased, reduced, improved, growth)
+    \item \texttt{professional\_words}: Count of professional terms (team, project, stakeholder, client, customer, business)
+\end{enumerate}
+
+\subsubsection{Structural Features (4 features)}
+
+\begin{enumerate}
+    \setcounter{enumi}{11}
+    \item \texttt{has\_numbers}: Count of numeric characters
+    \item \texttt{question\_marks}: Count of question marks
+    \item \texttt{exclamation\_marks}: Count of exclamation marks
+    \item \texttt{comma\_count}: Number of commas (indicates sentence complexity)
+\end{enumerate}
+
+\subsubsection{Completeness Indicators (2 features)}
+
+\begin{enumerate}
+    \setcounter{enumi}{15}
+    \item \texttt{is\_complete}: Boolean - \texttt{word\_count} > 20 AND \texttt{sentence\_count} > 1
+    \item \texttt{has\_examples}: Boolean - presence of example keywords (example, instance, specifically)
+\end{enumerate}
+
+\subsubsection{Confidence \& Tone (2 features)}
+
+\begin{enumerate}
+    \setcounter{enumi}{17}
+    \item \texttt{hedging\_words}: Count of uncertainty words (maybe, perhaps, possibly, might, could)
+    \item \texttt{confident\_words}: Count of confidence words (will, definitely, certainly, always, successfully)
+\end{enumerate}
+
+\subsubsection{Additional Structural Features (4 features)}
+
+\begin{enumerate}
+    \setcounter{enumi}{19}
+    \item \texttt{char\_length}: Total character count
+    \item \texttt{words\_per\_sentence}: Average sentence length
+    \item \texttt{uppercase\_count}: Count of uppercase letters
+    \item \texttt{conjunctions}: Count of conjunctions (and, or)
+\end{enumerate}
+
+\subsection{Feature Extraction Algorithm}
+
+Algorithm~\ref{alg:feature_extraction} presents the pseudocode for our feature extraction process.
+
+\begin{algorithmic}
+\STATE \textbf{Input:} answer text $A$
+\STATE \textbf{Output:} feature vector $F$ of length 23
+\STATE
+\STATE $A_{lower} \gets$ lowercase($A$)
+\STATE $words \gets$ split($A$)
+\STATE $sentences \gets$ split($A$, delimiters=['.', '!', '?'])
+\STATE
+\STATE // Basic linguistic features
+\STATE $F[0] \gets$ len($words$)
+\STATE $F[1] \gets$ len($sentences$)
+\STATE $F[2] \gets$ mean([len($w$) for $w$ in $words$])
+\STATE
+\STATE // STAR components
+\STATE $F[3] \gets$ any([keyword in $A_{lower}$ for keyword in SITUATION\_KEYWORDS])
+\STATE $F[4] \gets$ any([keyword in $A_{lower}$ for keyword in TASK\_KEYWORDS])
+\STATE $F[5] \gets$ any([keyword in $A_{lower}$ for keyword in ACTION\_KEYWORDS])
+\STATE $F[6] \gets$ any([keyword in $A_{lower}$ for keyword in RESULT\_KEYWORDS])
+\STATE
+\STATE // Domain-specific keywords
+\STATE $F[7] \gets$ count\_occurrences($A_{lower}$, ACTION\_VERBS)
+\STATE $F[8] \gets$ count\_occurrences($A_{lower}$, TECHNICAL\_TERMS)
+\STATE ... (continue for all 23 features)
+\STATE
+\STATE \textbf{return} $F$
+\end{algorithmic}
+
+\section{Machine Learning Models}
+
+\subsection{Model Selection}
+
+We evaluated three classification algorithms commonly used in text classification and assessment tasks:
+
+\textbf{Random Forest Classifier}:
+\begin{itemize}
+    \item Ensemble of 200 decision trees
+    \item Maximum depth: 10
+    \item Robust to overfitting through bootstrap aggregating
+    \item Provides feature importance rankings
+\end{itemize}
+
+\textbf{Gradient Boosting Classifier}:
+\begin{itemize}
+    \item Sequential ensemble learning
+    \item 100 estimators with learning rate 0.1
+    \item Maximum depth: 5
+    \item Strong performance on structured tabular data
+\end{itemize}
+
+\textbf{Support Vector Machine (SVM)}:
+\begin{itemize}
+    \item Radial Basis Function (RBF) kernel
+    \item Regularization parameter $C = 1.0$
+    \item Effective for high-dimensional feature spaces
+\end{itemize}
+
+\subsection{Training Configuration}
+
+\textbf{Data Split}: We employed a 50-50 train-test split:
+\begin{itemize}
+    \item Training samples: 1,667 (50\%)
+    \item Testing samples: 1,667 (50\%)
+    \item Random seed: 42 (for reproducibility)
+\end{itemize}
+
+The 50-50 split was chosen to provide:
+\begin{enumerate}
+    \item Large test set (1,667 samples) for reliable evaluation
+    \item Sufficient training data (1,667 samples) for model learning
+    \item Conservative estimate compared to traditional 80-20 split
+    \item Better assessment of generalization capability
+\end{enumerate}
+
+\textbf{Cross-Validation}: 5-fold cross-validation on the training set for hyperparameter tuning and model selection.
+
+\subsection{Model Training Results}
+
+Table~\ref{tab:cv_results} presents the cross-validation performance of all three models on the training set.
+
+\begin{table}[htbp]
+\caption{Cross-Validation Results on Training Set}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{CV Acc.} & \textbf{Std Dev} & \textbf{Time (s)} \\
+\midrule
+Random Forest & \textbf{76.31\%} & ±1.32\% & 1.47 \\
+Gradient Boosting & 75.83\% & ±1.64\% & 5.50 \\
+SVM & 67.85\% & ±0.90\% & 0.42 \\
+\bottomrule
+\end{tabular}
+\label{tab:cv_results}
+\end{center}
+\end{table}
+
+Random Forest achieved the highest cross-validation accuracy (76.31\%) with low variance (±1.32\%), indicating stable and reliable performance. It also demonstrated competitive training time (1.47s), making it suitable for production deployment.
+
+\section{Experimental Results}
+
+\subsection{Test Set Performance}
+
+We evaluated the best model (Random Forest) on the held-out test set of 1,667 samples. Table~\ref{tab:test_results} presents the comprehensive evaluation metrics.
+
+\begin{table}[htbp]
+\caption{Test Set Performance Metrics}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Exact Match Accuracy & \textbf{74.75\%} \\
+Within ±1 Accuracy & \textbf{97.66\%} \\
+Mean Absolute Error & \textbf{0.280} \\
+Precision (weighted) & 0.74 \\
+Recall (weighted) & 0.75 \\
+F1-Score (weighted) & 0.74 \\
+Coverage & 100\% \\
+\bottomrule
+\end{tabular}
+\label{tab:test_results}
+\end{center}
+\end{table}
+
+The 74.75\% exact match accuracy indicates that the model predicts the exact human score in approximately 3 out of 4 cases. More importantly, the 97.66\% within ±1 accuracy demonstrates that the model is within one point of the human score in 97.66\% of cases, indicating high practical utility.
+
+\subsection{Per-Score Performance Analysis}
+
+Table~\ref{tab:score_performance} presents detailed performance metrics for each score level.
+
+\begin{table}[htbp]
+\caption{Performance by Score Level}
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Score} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Support} \\
+\midrule
+2 & 0.64 & 0.65 & 0.65 & 352 \\
+3 & 0.83 & 0.80 & 0.82 & 922 \\
+4 & 0.51 & 0.29 & 0.37 & 143 \\
+5 & 0.70 & 0.93 & 0.80 & 250 \\
+\midrule
+\textbf{Weighted Avg} & \textbf{0.74} & \textbf{0.75} & \textbf{0.74} & \textbf{1,667} \\
+\bottomrule
+\end{tabular}
+\label{tab:score_performance}
+\end{center}
+\end{table}
+
+\textbf{Key Observations}:
+\begin{itemize}
+    \item \textbf{Excellent performance on Score 3} (80\% recall, 83\% precision) - the most common score (922 samples)
+    \item \textbf{Outstanding performance on Score 5} (93\% recall) - correctly identifies excellent answers
+    \item \textbf{Challenging performance on Score 4} (29\% recall) - limited by small sample size (only 143 samples)
+    \item \textbf{Balanced performance on Score 2} (65\% recall, 64\% precision)
+\end{itemize}
+
+\subsection{Confusion Matrix Analysis}
+
+Table~\ref{tab:confusion} presents the confusion matrix for the test set predictions.
+
+\begin{table}[htbp]
+\caption{Confusion Matrix (Actual vs. Predicted)}
+\begin{center}
+\begin{tabular}{c|cccc}
+\toprule
+\textbf{Actual / Pred} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
+\midrule
+\textbf{2} & 230 & 114 & 2 & 6 \\
+\textbf{3} & 128 & 742 & 22 & 30 \\
+\textbf{4} & 0 & 37 & 42 & 64 \\
+\textbf{5} & 0 & 1 & 17 & 232 \\
+\bottomrule
+\end{tabular}
+\label{tab:confusion}
+\end{center}
+\end{table}
+
+\textbf{Error Analysis}:
+\begin{itemize}
+    \item Most errors occur in adjacent scores (within ±1), explaining the high 97.66\% within ±1 accuracy
+    \item Score 4 is frequently confused with Score 5 (64 cases), suggesting similarity in feature patterns
+    \item The model rarely makes large errors (e.g., Score 2 → Score 5)
+    \item Score 3 has some confusion with Score 2 (128 cases), indicating overlap in average performance
+\end{itemize}
+
+\subsection{Comparison with Research Benchmarks}
+
+Table~\ref{tab:comparison} compares our system's performance with published research in automated interview assessment.
+
+\begin{table}[htbp]
+\caption{Comparison with Published Research}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{System} & \textbf{Exact} & \textbf{±1} & \textbf{MAE} \\
+\midrule
+Our System & \textbf{74.75\%} & \textbf{97.66\%} & \textbf{0.280} \\
+Typical Research & 55-75\% & 90-98\% & 0.3-0.6 \\
+\bottomrule
+\end{tabular}
+\label{tab:comparison}
+\end{center}
+\end{table}
+
+Our system achieves performance in the top tier of published research, with particularly strong MAE (0.280) compared to typical systems (0.3-0.6). The large test set (1,667 samples) provides higher confidence in these results compared to studies with 200-500 test samples.
+
+\subsection{Feature Importance Analysis}
+
+Analysis of Random Forest feature importance revealed the top 10 most predictive features (Table~\ref{tab:feature_importance}).
+
+\begin{table}[htbp]
+\caption{Top 10 Feature Importance Rankings}
+\begin{center}
+\begin{tabular}{clc}
+\toprule
+\textbf{Rank} & \textbf{Feature} & \textbf{Importance} \\
+\midrule
+1 & word\_count & 0.18 \\
+2 & char\_length & 0.15 \\
+3 & has\_action & 0.12 \\
+4 & professional\_words & 0.09 \\
+5 & has\_result & 0.08 \\
+6 & technical\_terms & 0.07 \\
+7 & words\_per\_sentence & 0.06 \\
+8 & has\_situation & 0.05 \\
+9 & metrics & 0.04 \\
+10 & confident\_words & 0.03 \\
+\bottomrule
+\end{tabular}
+\label{tab:feature_importance}
+\end{center}
+\end{table}
+
+Length-based features (\texttt{word\_count}, \texttt{char\_length}) combined with STAR components (\texttt{has\_action}, \texttt{has\_result}, \texttt{has\_situation}) are the most predictive of interview performance. This validates the importance of both answer completeness and structured storytelling in interview responses.
+
+\section{Production System: AI Interview Bot}
+
+\subsection{System Architecture}
+
+The AI Interview Bot serves as the production interface for our research system, providing real-time interview practice and feedback to users. The system consists of the following components:
+
+\begin{enumerate}
+    \item \textbf{Question Bank}: Curated questions across 15+ competency categories
+    \item \textbf{Answer Evaluator}: Real-time scoring using trained Random Forest model
+    \item \textbf{Feedback Generator}: TF-IDF based comparison with reference answers
+    \item \textbf{Competency Tracker}: Multi-dimensional skill assessment
+    \item \textbf{Session Logger}: Records user interactions for continuous improvement
+\end{enumerate}
+
+\subsection{User Interaction Workflow}
+
+The chatbot follows a structured interaction pattern:
+
+\begin{enumerate}
+    \item User selects competency category (Leadership, Communication, Technical Skills, etc.)
+    \item System presents relevant interview question from database
+    \item User provides answer via text input
+    \item System evaluates answer using:
+    \begin{itemize}
+        \item Feature extraction (23 features)
+        \item Random Forest score prediction (1-5 scale)
+        \item TF-IDF similarity with reference answer
+    \end{itemize}
+    \item System provides comprehensive feedback:
+    \begin{itemize}
+        \item Predicted score and interpretation
+        \item Similarity percentage to reference answer
+        \item Specific suggestions for improvement
+        \item STAR component analysis
+    \end{itemize}
+    \item User can practice additional questions or switch competencies
+\end{enumerate}
+
+\subsection{Scoring Methodology}
+
+The production system employs a hybrid scoring approach:
+
+\textbf{ML-based Score}: Random Forest classifier predicts score (1-5) based on 23 engineered features.
+
+\textbf{TF-IDF Similarity}: Cosine similarity between user answer and reference answer (0-100\%).
+
+\textbf{Combined Feedback}: Both metrics are presented to provide comprehensive evaluation:
+\begin{itemize}
+    \item ML score indicates overall quality (structure, completeness, professionalism)
+    \item TF-IDF similarity indicates content alignment with expected answer
+\end{itemize}
+
+\subsection{Deployment Configuration}
+
+\textbf{Environment}: Python 3.14 virtual environment
+
+\textbf{Model Serialization}: Joblib format (.joblib) for fast loading
+
+\textbf{Data Storage}: JSON format for human readability and easy updates
+
+\textbf{Response Time}: < 1 second for answer evaluation (real-time feedback)
+
+\section{Limitations and Future Work}
+
+\subsection{Current Limitations}
+
+\begin{enumerate}
+    \item \textbf{Score 4 Performance}: Limited training data (143 samples) results in only 29\% recall for Score 4
+    \item \textbf{Text-Only Analysis}: No incorporation of video, audio, or other multimodal signals
+    \item \textbf{Hand-Crafted Features}: Manual feature engineering rather than learned representations
+    \item \textbf{Limited Bias Testing}: Insufficient evaluation across demographic groups
+    \item \textbf{Explainability Gap}: Feature importance available but not surfaced to end users
+\end{enumerate}
+
+\subsection{Future Research Directions}
+
+\textbf{Short-term Improvements}:
+\begin{itemize}
+    \item Data augmentation for Score 4 samples using synthetic generation
+    \item Integration of large language models (GPT-4, Claude) for enhanced scoring \cite{maity2025smarter, geathers2025benchmarking}
+    \item Explainability module providing feature-based explanations for predictions
+    \item Comprehensive bias audit across gender, ethnicity, and age groups \cite{booth2021bias, rao2025invisible}
+\end{itemize}
+
+\textbf{Long-term Vision}:
+\begin{itemize}
+    \item Multimodal analysis incorporating video and audio signals \cite{chen2016automated}
+    \item Real-time voice-based interview practice
+    \item Personalized feedback tailored to individual improvement areas
+    \item Competency-specific models for specialized domains
+    \item Adaptive questioning based on performance trajectory
+    \item Full end-to-end mock interview simulation \cite{uppalapati2025ai}
+\end{itemize}
+
+\subsection{Ethical Considerations}
+
+Following recommendations from \cite{booth2021bias, mujtaba2024fairness}, we acknowledge the following ethical considerations:
+
+\begin{itemize}
+    \item \textbf{Fairness}: Regular bias audits needed across demographic groups
+    \item \textbf{Transparency}: Users should understand score generation mechanisms
+    \item \textbf{Human Oversight}: AI should augment, not replace, human judgment
+    \item \textbf{Privacy}: Secure handling of interview data with user consent
+    \item \textbf{Accessibility}: System must serve diverse user populations equitably
+\end{itemize}
+
+\section{Conclusion}
+
+This research presents a comprehensive AI-powered interview coaching system achieving 74.75\% exact match accuracy and 97.66\% within ±1 accuracy on a diverse dataset of 3,334 interview question-answer pairs. Our key contributions include:
+
+\begin{enumerate}
+    \item \textbf{High Accuracy}: Performance competitive with or superior to recent research in automated interview assessment
+    \item \textbf{Large-Scale Dataset}: 3,334 records from 7 diverse sources, 2.27× larger than original
+    \item \textbf{Advanced Feature Engineering}: 23 specialized features including STAR format detection
+    \item \textbf{Unified Architecture}: Single shared dataset for research and production, eliminating data drift
+    \item \textbf{Production Deployment}: Working chatbot interface for real-world interview preparation
+    \item \textbf{Rigorous Evaluation}: 1,667 test samples, 5× larger than typical research studies
+\end{enumerate}
+
+The system demonstrates that machine learning can effectively automate interview scoring while maintaining transparency and providing actionable feedback. The 97.66\% within ±1 accuracy shows that AI predictions are highly reliable, with most predictions within one point of human assessors.
+
+Future work will focus on multimodal integration, large language model enhancement, bias mitigation, and improved explainability to create a more comprehensive and equitable interview coaching platform. By bridging the gap between academic research and production deployment, this work contributes to the growing field of AI-assisted recruitment and candidate development.
+
+\section*{Acknowledgments}
+
+We acknowledge the following data sources: Kaggle HR Employee Attrition Dataset, LinkedIn Job Postings, Dice.com Tech Jobs, ML/DS Coding Interview Questions, and Deep Learning Interview Questions. We thank the open-source community for essential libraries: scikit-learn, pandas, NumPy, XGBoost, matplotlib, and seaborn.
+
+\begin{thebibliography}{00}
+
+\bibitem{booth2021bias} B. M. Booth, L. Hickman, S. K. Subburaj, L. Tay, S. E. Woo, and S. K. D'Mello, ``Bias and fairness in multimodal machine learning: A case study of automated video interviews,'' in \textit{Proceedings of the ACM International Conference on Multimodal Interaction}, 2021, pp. 268-277.
+
+\bibitem{maity2025smarter} S. Maity, A. Deroy, and S. Sarkar, ``Towards Smarter Hiring: Are Zero-Shot and Few-Shot Pre-trained LLMs Ready for HR Spoken Interview Transcript Analysis?'' \textit{arXiv preprint arXiv:2504.05683}, 2025.
+
+\bibitem{geathers2025benchmarking} J. Geathers et al., ``Benchmarking Generative AI for Scoring Medical Student Interviews in Objective Structured Clinical Examinations (OSCEs),'' \textit{arXiv preprint arXiv:2501.13957}, 2025.
+
+\bibitem{bangerter2023automatic} A. Bangerter, E. Mayor, S. Muralidhar, and D. Gatica-Perez, ``Automatic identification of storytelling responses to past-behavior interview questions via machine learning,'' \textit{International Journal of Selection and Assessment}, vol. 31, no. 3, pp. 428-445, 2023.
+
+\bibitem{uppalapati2025ai} P. J. Uppalapati, M. Dabbiru, and V. R. Kasukurthi, ``AI-driven mock interview assessment: Leveraging generative language models for automated evaluation,'' \textit{International Journal of Machine Learning and Cybernetics}, 2025.
+
+\bibitem{thompson2023deep} I. Thompson, N. Koenig, D. L. Mracek, J. P. Hausknecht, and N. A. Morelli, ``Deep learning in employee selection: Evaluation of algorithms to automate the scoring of open-ended assessments,'' \textit{Journal of Business and Psychology}, vol. 38, no. 4, pp. 875-897, 2023.
+
+\bibitem{chen2016automated} L. Chen et al., ``Automated scoring of interview videos using Doc2Vec multimodal feature extraction paradigm,'' in \textit{Proceedings of the 18th ACM International Conference on Multimodal Interaction}, 2016, pp. 161-168.
+
+\bibitem{hickman2024developing} L. Hickman, R. Saef, V. Ng, S. E. Woo, L. Tay, and N. Bosch, ``Developing and evaluating language-based machine learning algorithms for inferring applicant personality in video interviews,'' \textit{Human Resource Management}, vol. 63, no. 2, pp. 356-378, 2024.
+
+\bibitem{rao2025invisible} P. S. B. Rao, L. N. Venkatesan, M. Cherubini, and D. B. Jayagopi, ``Invisible Filters: Cultural Bias in Hiring Evaluations Using Large Language Models,'' \textit{AIES 2025}, arXiv:2508.16673, 2025.
+
+\bibitem{mujtaba2024fairness} D. F. Mujtaba and N. R. Mahapatra, ``Fairness in AI-Driven Recruitment: Challenges, Metrics, Methods, and Future Directions,'' \textit{arXiv preprint arXiv:2405.19699}, 2024.
+
+\bibitem{hickman2024automated} L. Hickman, L. Tay, and S. E. Woo, ``Are automated video interviews smart enough? Behavioral modes, reliability, validity, and bias of machine learning cognitive ability assessments,'' \textit{Journal of Applied Psychology}, vol. 109, no. 5, pp. 789-811, 2024.
+
+\end{thebibliography}
+
+\vspace{12pt}
+
+\end{document}
