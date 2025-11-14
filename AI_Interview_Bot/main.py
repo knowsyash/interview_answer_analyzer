@@ -24,12 +24,19 @@ def get_interview_category():
     print("="*70)
 
     # First ask technical vs non-technical
+    valid_type_inputs = {
+        '1': 'technical', 'technical': 'technical', 'tech': 'technical',
+        '2': 'non-technical', 'non-technical': 'non-technical', 'nontechnical': 'non-technical', 'non': 'non-technical', 'behavioral': 'non-technical'
+    }
+
     while True:
-        type_choice = input("\nAre you interested in Technical or Non-Technical domain? (1-2): ").strip()
-        if type_choice in ["1", "2"]:
+        type_choice = input("\nAre you interested in Technical or Non-Technical domain? (1-2 or 'technical'/'behavioral'): ").strip().lower()
+        mapped = valid_type_inputs.get(type_choice)
+        if mapped:
+            type_choice = '1' if mapped == 'technical' else '2'
             break
         else:
-            print("❌ Invalid choice. Please choose 1 or 2.")
+            print("❌ Invalid choice. Please choose 1, 2, or type 'technical'/'behavioral'.")
     
     # Then ask specific domain
     print("\n" + "="*70)
@@ -37,31 +44,54 @@ def get_interview_category():
     print("="*70)
     
     if type_choice == "1":
-        # Technical domains - Only Web Development (has Q+A+Score)
-        print("\n🎯 TECHNICAL DOMAIN - WITH REFERENCE ANSWERS & SCORES:")
+        # Technical domains - Multiple options from Stack Overflow + Web Dev
+        print("\n🎯 TECHNICAL DOMAINS - WITH REFERENCE ANSWERS & SCORES:")
         print("="*70)
         
-        print("\n1. Web Development")
-        print("   📊 44 Q&A pairs covering HTML, CSS, JavaScript, React, Node.js")
-        print("   ✅ Has Questions + Answers + Human Scores (8-10/10)")
-        print("   ✅ Similarity checking enabled for accurate scoring")
-        print("   📚 Expert-validated answers with quality ratings")
-        print("   🎯 Best for: Frontend & Backend interview preparation")
-        print("   💡 Short technical answers validated via similarity matching")
-        print("="*70)
+        print("\n1. Web Development (Frontend/Backend)")
+        print("   📊 44 expert Q&A pairs - HTML, CSS, JavaScript, React, Node.js")
+        print("   ✅ Human scores: 8-10/10")
         
-        print("\n🚧 Other technical domains removed (no answers or scores)")
-        print("   Use Web Development for technical interview practice")
+        print("\n2. Python Programming")
+        print("   📊 1,288 Stack Overflow Q&A - Django, Flask, Pandas, NumPy")
+        print("   ✅ Community-validated answers with scores")
+        
+        print("\n3. Java Development")
+        print("   📊 2,711 Stack Overflow Q&A - Spring, Hibernate, Maven, Android")
+        print("   ✅ Enterprise & Android development questions")
+        
+        print("\n4. C# / .NET Development")
+        print("   📊 3,022 Stack Overflow Q&A - ASP.NET, Entity Framework, WPF")
+        print("   ✅ Microsoft stack & Windows development")
+        
+        print("\n5. JavaScript / Node.js")
+        print("   📊 1,026 Stack Overflow Q&A - React, Angular, TypeScript, Node")
+        print("   ✅ Modern web frameworks & full-stack JS")
+        
+        print("\n6. Database / SQL")
+        print("   📊 1,025 Stack Overflow Q&A - MySQL, PostgreSQL, MongoDB, Oracle")
+        print("   ✅ SQL queries, database design, optimization")
+        
         print("="*70)
         
         while True:
-            domain_choice = input("\nSelect Web Development domain? (1 or back): ").strip()
-            if domain_choice == "1":
-                return "webdev"
-            elif domain_choice.lower() == "back":
+            domain_choice = input("\nSelect domain (1-6 or type name like 'python'/'java' or 'back'): ").strip().lower()
+            
+            domain_map = {
+                '1': 'webdev', 'webdev': 'webdev', 'web': 'webdev', 'web development': 'webdev',
+                '2': 'python', 'python': 'python', 'py': 'python',
+                '3': 'java', 'java': 'java',
+                '4': 'csharp', 'c#': 'csharp', 'csharp': 'csharp', '.net': 'csharp', 'dotnet': 'csharp',
+                '5': 'javascript', 'javascript': 'javascript', 'js': 'javascript', 'node': 'javascript', 'nodejs': 'javascript',
+                '6': 'database', 'database': 'database', 'sql': 'database', 'db': 'database'
+            }
+            
+            if domain_choice in domain_map:
+                return domain_map[domain_choice]
+            elif domain_choice == 'back':
                 return get_interview_category()
             else:
-                print("❌ Invalid choice. Please choose 1 or type 'back'.")
+                print("❌ Invalid choice. Please choose 1-6, type domain name, or 'back'.")
     
     else:
         # Non-technical domains
@@ -76,11 +106,11 @@ def get_interview_category():
         print("="*70)
         
         while True:
-            domain_choice = input("\nWhich non-technical domain are you interested in? (1): ").strip()
-            if domain_choice == "1":
+            domain_choice = input("\nWhich non-technical domain are you interested in? (1 or type 'behavioral'): ").strip().lower()
+            if domain_choice in ("1", "behavioral", "behavior"):
                 return "behavioral"
             else:
-                print("❌ Invalid choice. Please choose 1.")
+                print("❌ Invalid choice. Please choose 1 or type 'behavioral'.")
 
 def get_technical_subcategory():
     """This function is no longer used - removed technical question-only datasets"""
@@ -662,6 +692,7 @@ def run_interview_session():
         print("="*70)
         
         all_questions_data = loader.get_interview_questions_dataset(format='json')
+    
     elif category == "webdev":
         # Start web development interview
         print("\n" + "="*70)
@@ -689,90 +720,78 @@ def run_interview_session():
         else:
             print("❌ Web development dataset not found!")
             return
+    
+    elif category in ["python", "java", "csharp", "javascript", "database"]:
+        # Load Stack Overflow dataset with tag filtering
+        domain_info = {
+            'python': {
+                'name': 'PYTHON PROGRAMMING',
+                'tags': ['python', 'django', 'flask', 'pandas', 'numpy', 'scipy'],
+                'count': 1288,
+                'desc': 'Python, Django, Flask, Data Science'
+            },
+            'java': {
+                'name': 'JAVA DEVELOPMENT',
+                'tags': ['java', 'spring', 'hibernate', 'maven', 'android'],
+                'count': 2711,
+                'desc': 'Java, Spring, Android, Enterprise'
+            },
+            'csharp': {
+                'name': 'C# / .NET DEVELOPMENT',
+                'tags': ['c#', '.net', 'asp.net', 'entity-framework', 'wpf', 'visual-studio'],
+                'count': 3022,
+                'desc': 'C#, ASP.NET, Entity Framework, WPF'
+            },
+            'javascript': {
+                'name': 'JAVASCRIPT / NODE.JS',
+                'tags': ['javascript', 'node.js', 'react', 'angular', 'vue.js', 'typescript'],
+                'count': 1026,
+                'desc': 'JavaScript, React, Node.js, TypeScript'
+            },
+            'database': {
+                'name': 'DATABASE / SQL',
+                'tags': ['sql', 'mysql', 'postgresql', 'mongodb', 'database', 'oracle'],
+                'count': 1025,
+                'desc': 'SQL, MySQL, PostgreSQL, MongoDB'
+            }
+        }
+        
+        info = domain_info[category]
+        print("\n" + "="*70)
+        print(f"{info['name']} INTERVIEW")
+        print("="*70)
+        print(f"📊 {info['count']} Stack Overflow Q&A pairs")
+        print(f"✅ Topics: {info['desc']}")
+        print("✅ Community-validated answers with normalized scores")
+        print("🎯 You'll answer 5 questions from real developer problems")
+        print("💡 Technical answers validated via similarity matching")
+        print("="*70)
+        
+        # Load stackoverflow_training_data.csv and filter by tags
+        so_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'real_dataset_score', 'stackoverflow_training_data.csv')
+        if os.path.exists(so_path):
+            df = pd.read_csv(so_path)
+            all_questions_data = []
+            
+            for _, row in df.iterrows():
+                tags_str = str(row['tags']).lower()
+                # Check if any of the domain tags are present
+                if any(tag in tags_str for tag in info['tags']):
+                    all_questions_data.append({
+                        'question': row['question'],
+                        'answer': row['user_answer'],
+                        'competency': row['tags'],
+                        'human_score': row['score']
+                    })
+            
+            print(f"✅ Filtered to {len(all_questions_data)} questions for {info['name']}")
+        else:
+            print("❌ Stack Overflow dataset not found!")
+            return
             
     # Removed: ml_ai, software_engineering, deep_learning datasets
-    # Reason: Missing answers and/or scores (backed up to _removed_datasets_backup)
-    elif category in ["ml_ai", "software_engineering", "deep_learning"]:
-        print("\n❌ This domain has been removed (no Q+A+Score structure)")
-        print("Please select Web Development or Behavioral domain.")
-        return run_interview_session()
-        
-        # Load coding_interview_question_bank.csv
-        ml_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'kaggle_datasets', 'coding_interview_question_bank.csv')
-        if os.path.exists(ml_path):
-            df = pd.read_csv(ml_path)
-            all_questions_data = []
-            for _, row in df.iterrows():
-                all_questions_data.append({
-                    'question': row['question'],
-                    'answer': '',  # No reference answers in this dataset
-                    'competency': row['category'],
-                    'human_score': 3,  # Default score
-                    'difficulty': row.get('difficulty', 'Medium')
-                })
-        else:
-            print("❌ Machine Learning dataset not found!")
-            return
-            
-    elif category == "software_engineering":
-        # Software Engineering interview
-        print("\n" + "="*70)
-        print("SOFTWARE ENGINEERING INTERVIEW")
-        print("="*70)
-        print("📊 200 Q&A pairs across 22 categories")
-        print("✅ Reference answers available - Similarity checking ENABLED")
-        print("📚 System Design, DevOps, OOP, Algorithms, Databases, Security")
-        print("🎯 You'll answer 5 questions with expert reference answers")
-        print("💡 Short technical answers validated via similarity matching")
-        print("="*70)
-        
-        # Load Software Questions.csv
-        se_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'kaggle_datasets', 'Software Questions.csv')
-        if os.path.exists(se_path):
-            df = pd.read_csv(se_path)
-            all_questions_data = []
-            for _, row in df.iterrows():
-                all_questions_data.append({
-                    'question': row['Question'],
-                    'answer': row['Answer'],
-                    'competency': row['Category'],
-                    'human_score': 4,  # High quality answers
-                    'difficulty': row.get('Difficulty', 'Medium')
-                })
-        else:
-            print("❌ Software Engineering dataset not found!")
-            return
-            
-    elif category == "deep_learning":
-        # Deep Learning interview
-        print("\n" + "="*70)
-        print("DEEP LEARNING INTERVIEW (SPECIALIZED)")
-        print("="*70)
-        print("📊 111 advanced deep learning questions")
-        print("⚠️  Reference answers NOT available - Feature-based scoring only")
-        print("📚 Neural networks, CNN, RNN, transformers, training techniques")
-        print("🎯 You'll answer 5 challenging DL questions")
-        print("💡 Scoring based on technical depth and explanation quality")
-        print("="*70)
-        
-        # Load deeplearning_questions.csv
-        dl_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'kaggle_datasets', 'deeplearning_questions.csv')
-        if os.path.exists(dl_path):
-            df = pd.read_csv(dl_path)
-            all_questions_data = []
-            for _, row in df.iterrows():
-                if row['DESCRIPTION'] and str(row['DESCRIPTION']).strip():
-                    all_questions_data.append({
-                        'question': row['DESCRIPTION'],
-                        'answer': '',  # No reference answers
-                        'competency': 'Deep Learning',
-                        'human_score': 3
-                    })
-        else:
-            print("❌ Deep Learning dataset not found!")
-            return
     else:
-        print("❌ Invalid category!")
+        print("\n❌ Invalid category!")
         return
     
     if not all_questions_data:
@@ -790,8 +809,8 @@ def run_interview_session():
     print(f"✅ Loaded {len(unique_questions)} unique questions")
     
     # Determine number of questions based on category
-    if category in ["ml_ai", "software_engineering", "deep_learning"]:
-        NUM_QUESTIONS = 5  # More questions for technical domains
+    if category in ["python", "java", "csharp", "javascript", "database"]:
+        NUM_QUESTIONS = 5  # More questions for Stack Overflow technical domains
     else:
         NUM_QUESTIONS = 3  # Standard for behavioral/webdev
         

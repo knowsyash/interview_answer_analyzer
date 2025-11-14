@@ -374,24 +374,36 @@ class RandomForestAnswerEvaluator:
         }
     
     def load_model(self, model_path=None):
-        """Load trained Random Forest model"""
-        if model_path is None:
-            model_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), 
-                'data', 
-                'random_forest_model.joblib'
-            )
-        
-        if not os.path.exists(model_path):
+        """Load trained Random Forest model.
+
+        Tries several common locations to be robust to different data folder layouts.
+        """
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Candidate paths (in order)
+        candidates = []
+        if model_path:
+            candidates.append(model_path)
+        candidates.append(os.path.join(base_dir, 'data', 'random_forest_model.joblib'))
+        candidates.append(os.path.join(base_dir, 'data', 'real_dataset_score', 'random_forest_model.joblib'))
+        candidates.append(os.path.join(base_dir, 'data', 'real_use', 'random_forest_model.joblib'))
+
+        found_path = None
+        for p in candidates:
+            if p and os.path.exists(p):
+                found_path = p
+                break
+
+        if not found_path:
             raise FileNotFoundError(
-                f"Model not found at {model_path}. Please train the model first using train_model()."
+                f"Model not found. Checked paths: {candidates}"
             )
-        
-        model_data = joblib.load(model_path)
+
+        model_data = joblib.load(found_path)
         self.model = model_data['model']
         self.feature_names = model_data['feature_names']
         
-        print(f"Model loaded from: {model_path}")
+        print(f"Model loaded from: {found_path}")
         print(f"Test Accuracy: {model_data.get('test_accuracy', 'N/A'):.4f}")
         print(f"Test MAE: {model_data.get('test_mae', 'N/A'):.4f}")
         

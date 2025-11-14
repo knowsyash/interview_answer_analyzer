@@ -5,3 +5,10 @@ Answer    : i worked on machine learning project incluse supervised learning
 Score     : 6.0
 Feedback  : Overall: 6.00/10, Semantic: 6.00/10, Structure: 6.00/10
 
+---- New Response ----
+Timestamp : 2025-11-14 08:24:58.238115
+Question  : How to do a Select in a Select
+Answer    : select
+Score     : 1.0
+Feedback  : Overall: 1.00/10, Semantic: 1.00/10, Structure: 1.00/10
+

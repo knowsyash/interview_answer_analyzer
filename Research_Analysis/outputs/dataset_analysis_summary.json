@@ -1,0 +1,28 @@
+{
+  "total_qa_pairs": 11514,
+  "datasets": {
+    "behavioral": {
+      "records": 1470,
+      "avg_score": 2.594557823129252,
+      "avg_words": 50.28095238095238,
+      "unique_competencies": 21
+    },
+    "webdev": {
+      "records": 44,
+      "avg_score": 8.863636363636363,
+      "avg_words": 108.61363636363636,
+      "unique_topics": 115
+    },
+    "stackoverflow": {
+      "records": 10000,
+      "avg_score": 2.3218,
+      "avg_words": 102.9848,
+      "unique_tags": 2675
+    },
+    "combined": {
+      "records": 11470,
+      "avg_score": 2.3567567567567567,
+      "avg_words": 96.23025283347864
+    }
+  }
+}
