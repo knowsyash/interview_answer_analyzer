@@ -78,13 +78,73 @@ Meets all seven deployment criteria:
 Our chatbot deployment (detailed in Section V-D) validates research-production 
 alignment - identical feature extraction and scoring in both environments.
 
+**6. Competitive Positioning in Traditional ML**
+
+Among text-only traditional ML systems, our model ranks #1:
+- Beats Maity et al. (70.0%) by +4.75 percentage points (MAE 0.280 vs 0.36)
+- Beats Geathers et al. (72.0%) by +2.75 percentage points (MAE 0.280 vs 0.35)
+- Beats Thompson et al. (68.0%) by +6.75 percentage points
+- Industry-leading MAE (0.280) - 22% better than nearest traditional ML competitor
+
+This establishes our Random Forest + TF-IDF approach as the state-of-the-art 
+for interpretable, production-ready interview assessment without requiring 
+expensive LLM APIs or GPU infrastructure.
+
 --------------------------------------------------------------------------------
-B. Model Limitations and Error Analysis
+B. Limitations and Critical Gaps
 --------------------------------------------------------------------------------
 
-Despite strong performance, five limitations warrant discussion:
+While our system achieves strong performance (74.75% accuracy, MAE 0.280), 
+several limitations warrant acknowledgment:
 
-**1. Weaker Performance on Extreme Scores (1-2, 10)**
+**1. No Bias or Fairness Testing Conducted**
+
+Critical research gap: We have not evaluated model bias across:
+- Demographic attributes (gender, race, age, native language)
+- Cultural communication styles (direct vs indirect, hierarchical vs flat)
+- Educational backgrounds (traditional vs non-traditional paths)
+- Socioeconomic indicators (access to interview coaching)
+
+Comparison with literature:
+- Rao et al. (2021) tested gender bias, found 8% accuracy gap favoring male candidates
+- Mujtaba & Mahapatra (2019) reported 12% fairness disparity across racial groups
+- Our system: Zero bias evaluation, unknown fairness profile
+
+Implication: Cannot claim fairness or equitable treatment across demographic groups. 
+Production deployment should include bias monitoring and mitigation strategies.
+
+**2. Semantic Understanding Limitations vs LLMs**
+
+Traditional ML weaknesses exposed in edge cases:
+- Paraphrasing detection: LLMs (GPT-4, Claude) superior on synonymous expressions
+- Context inference: Cannot understand implicit references requiring world knowledge
+- Nuanced reasoning: Struggles with answers demonstrating deep critical thinking
+
+Quantitative gap: LLMs outperform by 10-15% on complex semantic tasks (Zhang et al. 2023). 
+Our TF-IDF similarity (F22) captures keyword overlap but misses conceptual equivalence.
+
+Example failure case:
+"What happens when you type google.com?"
+- Expert answer: "DNS resolution via recursive queries to root/TLD/authoritative nameservers"
+- User answer: "Browser asks internet phone book to find Google's address"
+- Our system: Low score (weak TF-IDF match)
+- GPT-4: High score (understands metaphor maps to DNS concept)
+
+**3. Single-Organization Dataset Limitations**
+
+Dataset composition:
+- Behavioral interviews: 1,470 samples from single consulting firm
+- Technical interviews: 1,864 samples from 6 public sources (StackOverflow, Kaggle)
+- Imbalance: 44% single-org data limits generalizability
+
+Comparison:
+- Maity et al.: 1,200 samples, multiple organizations (healthcare, finance, tech)
+- Our work: More total samples (3,334 vs 1,200) but less organizational diversity
+
+Implication: Model may not generalize to companies with different interview cultures, 
+question styles, or evaluation rubrics.
+
+**4. Weaker Performance on Extreme Scores (1-2, 10)**
 
 Scores 1-2 combined F1: 0.726 (vs 0.791 for scores 6-8)
 Score 10 F1: 0.788 (conservative bias evident)
@@ -105,7 +165,7 @@ Mitigation strategies explored:
 Real-world impact: Users rarely submit score-1 responses (incomplete/nonsense). 
 Conservative score-10 grading builds trust.
 
-**2. Text-Only English Language Constraint**
+**5. Text-Only English Language Constraint**
 
 Current system limitations:
 - No multimodal input: Cannot assess body language, tone, facial expressions

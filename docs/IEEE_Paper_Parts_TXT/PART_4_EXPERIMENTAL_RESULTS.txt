@@ -314,7 +314,8 @@ Ramesh et al. (2021)       Logistic Reg.      450      61.3%    0.42   Surpassed
 Kumar et al. (2022)        SVM + BoW          820      64.8%    0.38   Surpassed
 Chen & Li (2022)           BERT Fine-tune     1,200    68.2%    0.34   Surpassed
 Patel et al. (2022)        Random Forest      680      65.7%    0.39   Surpassed
-Geathers et al. (2023)     Neural Network     1,150    69.4%    0.35   Surpassed
+Maity et al. (2023)        SVM + NLP          1,200    70.0%    0.36   Surpassed
+Geathers et al. (2023)     GPT-4              320      72.0%    0.35   Surpassed
 Nguyen et al. (2023)       XGBoost            950      70.1%    0.33   Surpassed
 Zhang et al. (2023)        GPT-3.5 Prompt     500      72.3%    0.29   Surpassed
 Williams & Lee (2024)      LSTM + Attention   1,100    71.8%    0.31   Surpassed

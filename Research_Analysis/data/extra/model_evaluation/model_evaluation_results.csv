@@ -1,0 +1,5 @@
+Scenario,Coverage,Accuracy,Over_Judgment,Under_Judgment
+Train_A_Test_A,100.0,100.0,0.0,0.0
+Train_A_Test_B,100.0,100.0,0.0,0.0
+Train_B_Test_B,100.0,100.0,0.0,0.0
+Train_A&B_Test_A&B,100.0,100.0,0.0,0.0

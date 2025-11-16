@@ -12,3 +12,10 @@ Answer    : select
 Score     : 1.0
 Feedback  : Overall: 1.00/10, Semantic: 1.00/10, Structure: 1.00/10
 
+---- New Response ----
+Timestamp : 2025-11-14 11:10:48.167789
+Question  : Read Session Id using Javascript
+Answer    : i dont know
+Score     : 2.5
+Feedback  : Overall: 2.50/10, Semantic: 2.50/10, Structure: 2.50/10
+

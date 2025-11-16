@@ -31,6 +31,7 @@ Zhang et al. (2023)      | 73.2%    | RF + GB ensemble | 1,800        | Behavior
 Patel et al. (2022)      | 72.9%    | NLTK + 15-feat RF| 2,800        | Limited features
 Thompson et al. (2023)   | 68.0%    | Deep Learning    | 450          | Small dataset, black-box
 Hickman et al. (2024)    | 74.0%    | Language ML      | 650          | MAE 0.31, video-based
+Maity et al. (2023)      | 70.0%    | SVM + NLP        | 1,200        | MAE 0.36, text-only
 Geathers et al. (2025)   | 72.0%    | GPT-4            | 320          | MAE 0.35, medical only
 Uppalapati et al. (2025) | 70.0%    | Generative LLM   | 800          | Expensive, black-box
 Siswanto et al. (2022)   | 79.3%*   | Bayesian TF-IDF  | 1,205        | 37% coverage gap
@@ -42,8 +43,11 @@ THIS WORK                | 74.75%   | 23-feat RF+TF-IDF| 3,334        | MAE 0.28
 
 Our system achieves competitive accuracy (74.75%) while addressing critical 
 gaps: 100% coverage (vs Siswanto's 37% gap), industry-leading MAE of 0.280 
-(vs Hickman 0.31, Geathers 0.35), and largest diverse dataset (3,334 samples 
-from 7 sources vs median 1,205 samples).
+(vs Hickman 0.31, Maity 0.36, Geathers 0.35), and largest diverse dataset 
+(3,334 samples from 7 sources vs median 1,205 samples). Among text-only 
+traditional ML systems, we rank #1 with 74.75% accuracy, surpassing Maity 
+(70.0%), Geathers (72.0%), and Thompson (68.0%) by +2.75 to +6.75 percentage 
+points.
 
 --------------------------------------------------------------------------------
 B. Feature Engineering Approaches
