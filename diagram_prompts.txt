@@ -1,0 +1,927 @@
+================================================================================
+IMAGE PROMPTS FOR AI-POWERED INTERVIEW COACH BOT PROJECT DIAGRAMS
+================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. USER FLOW DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a professional user flow diagram for an AI Interview Coach Bot system using standard flowchart symbols.
+
+FLOWCHART ELEMENTS WITH PROPER SYMBOLS:
+
+[OVAL] START
+"User Opens Application"
+↓
+[RECTANGLE] PROCESS 1
+"User Selects Interview Domain"
+(Web Development, Data Science, etc.)
+↓
+[RECTANGLE] PROCESS 2
+"System Fetches Random Question"
+From Database
+↓
+[PARALLELOGRAM] INPUT 1
+"User Types Answer"
+In Text Input Field
+↓
+[RECTANGLE] PROCESS 3
+"User Clicks Submit Button"
+↓
+[RECTANGLE] PROCESS 4
+"NLTK Preprocessing"
+Tokenization → Lemmatization → Stopword Removal
+↓
+[RECTANGLE] PROCESS 5
+"Feature Extraction"
+Extract 32 Features
+(Length, Keywords, Sentiment, Structure)
+↓
+[RECTANGLE] PROCESS 6
+"Random Forest Model"
+Predicts Score (Weight: 0.40)
+↓
+[RECTANGLE] PROCESS 7
+"Gradient Boosting Model"
+Predicts Score (Weight: 0.35)
+↓
+[RECTANGLE] PROCESS 8
+"SVM Model"
+Predicts Score (Weight: 0.25)
+↓
+[RECTANGLE] PROCESS 9
+"Ensemble Voting"
+Weighted Average of 3 Predictions
+↓
+[PARALLELOGRAM] OUTPUT 1
+"Display Score (0-10)"
+With Detailed Feedback
+↓
+[PARALLELOGRAM] OUTPUT 2
+"Display Reference Answer"
+For Comparison
+↓
+[DIAMOND] DECISION 1
+"Try Another Question?"
+↓                    ↓
+YES                 NO
+↓                    ↓
+(loops back to      [OVAL] END
+PROCESS 2)          "Session Complete"
+
+FORMATTING SPECIFICATIONS:
+- Use OVAL shapes for START and END terminals
+- Use RECTANGLES for all process steps
+- Use PARALLELOGRAMS for input/output operations
+- Use DIAMONDS for decision points with Yes/No branches
+- All shapes in BLACK outline with WHITE fill
+- Text in BLACK, centered, Arial or Helvetica font
+- Arrows: solid BLACK lines with arrowheads
+- No colors, purely black and white professional format
+- Line weight: 2pt for shapes, 1.5pt for arrows
+- Equal spacing between elements (50-60px vertical gap)
+- Align all shapes vertically on center axis
+Style: Professional technical flowchart, IEEE standard symbols, black and white only.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. SYSTEM ARCHITECTURE DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a detailed system architecture diagram for an AI-powered interview assessment system using 6 horizontal layers.
+
+LAYERED ARCHITECTURE (Top to Bottom):
+
+┌─────────────────────────────────────────────────────────────┐
+│  LAYER 1: PRESENTATION LAYER                                │
+├─────────────────────────────────────────────────────────────┤
+│  [Box] Flask Web Application (Port 5000)                    │
+│  [Box] RESTful API: /evaluate_answer, /get_question         │
+│  [Box] User Interface: HTML Forms & Result Display          │
+└─────────────────────────────────────────────────────────────┘
+         ↓ HTTP Request (Question ID, Answer Text)
+┌─────────────────────────────────────────────────────────────┐
+│  LAYER 2: PREPROCESSING LAYER                               │
+├─────────────────────────────────────────────────────────────┤
+│  [Box] NLTK Tokenizer  [Box] Lemmatizer                     │
+│  [Box] Stopword Remover  [Box] Text Cleaner                 │
+└─────────────────────────────────────────────────────────────┘
+         ↓ Processed Tokens
+┌─────────────────────────────────────────────────────────────┐
+│  LAYER 3: FEATURE EXTRACTION LAYER (32 Features)            │
+├─────────────────────────────────────────────────────────────┤
+│  [Box] Basic (5)    [Box] Keyword (8)   [Box] Quality (7)   │
+│  [Box] Sentiment (4) [Box] Structural (5) [Box] Semantic (3)│
+└─────────────────────────────────────────────────────────────┘
+         ↓ Feature Vector [32]
+┌─────────────────────────────────────────────────────────────┐
+│  LAYER 4: MACHINE LEARNING LAYER                            │
+├─────────────────────────────────────────────────────────────┤
+│  [Box] Random Forest     [Box] Gradient Boosting            │
+│  (100 trees, d=20)       (lr=0.1, n=100)                    │
+│  Weight: 0.40            Weight: 0.35                       │
+│                                                             │
+│  [Box] Support Vector Machine (RBF kernel, C=1.0)           │
+│  Weight: 0.25                                               │
+│                                                             │
+│  [Box] Ensemble Voting Mechanism → Weighted Average         │
+└─────────────────────────────────────────────────────────────┘
+         ↓ Predicted Score
+┌─────────────────────────────────────────────────────────────┐
+│  LAYER 5: SCORING LAYER                                     │
+├─────────────────────────────────────────────────────────────┤
+│  [Box] Score Normalizer (0-10 Scale)                        │
+│  [Box] Confidence Calculator                                │
+│  [Box] Feedback Generator (Strengths, Weaknesses, Tips)     │
+└─────────────────────────────────────────────────────────────┘
+         ↓ Final Score + Feedback
+┌─────────────────────────────────────────────────────────────┐
+│  LAYER 6: DATA LAYER                                        │
+├─────────────────────────────────────────────────────────────┤
+│  [Cylinder] Training Dataset (11,514 samples)               │
+│  [Cylinder] Question Database (500+ questions)              │
+│  [Cylinder] Reference Answers                               │
+│  [Cylinder] Model Files (random_forest_model.joblib)        │
+└─────────────────────────────────────────────────────────────┘
+
+FORMATTING SPECIFICATIONS:
+- Each layer: horizontal rectangle with BLACK border (3pt)
+- Layer header: BLACK text, bold, larger font
+- Components: smaller BLACK rectangles inside each layer
+- Data storage: cylinder symbols for databases
+- Arrows: BLACK solid lines (2pt) with labels
+- All shapes WHITE fill, BLACK outlines
+- Text: BLACK, Arial/Helvetica, left-aligned in boxes
+- Vertical arrows between layers showing data flow
+- Equal height for all layers (100px each)
+Style: Professional layered architecture, black and white, technical documentation standard.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. SOFTWARE DEVELOPMENT LIFECYCLE (SDLC) DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a circular software development lifecycle diagram for the AI Interview Coach Bot project using proper geometric shapes.
+
+CIRCULAR SDLC LAYOUT:
+
+                    [RECTANGLE]
+               ┌─────────────────┐
+               │   PHASE 1:      │
+               │  REQUIREMENTS   │
+               │    ANALYSIS     │
+               └─────────────────┘
+                       ↓
+    [RECTANGLE]                      [RECTANGLE]
+┌─────────────┐                  ┌─────────────┐
+│  PHASE 6:   │                  │  PHASE 2:   │
+│ MAINTENANCE │  ← [  CENTER  ] →│   DESIGN    │
+└─────────────┘     [CIRCLE]      └─────────────┘
+                  "AI Interview
+    [RECTANGLE]   Coach Bot"       [RECTANGLE]
+┌─────────────┐   System         ┌─────────────┐
+│  PHASE 5:   │                  │  PHASE 3:   │
+│ DEPLOYMENT  │                  │IMPLEMENTATION│
+└─────────────┘                  └─────────────┘
+       ↑                                ↓
+                [RECTANGLE]
+           ┌─────────────────┐
+           │   PHASE 4:      │
+           │    TESTING      │
+           └─────────────────┘
+
+PHASE DETAILS:
+
+PHASE 1 - REQUIREMENTS ANALYSIS (Top, 12 o'clock):
+• Identify interview assessment challenges
+• Define 5 objectives: accuracy, fairness, speed, scalability, interpretability
+• Gather 11,514 interview Q&A samples
+• Define 32 features for answer evaluation
+
+PHASE 2 - DESIGN (Right-Top, 2 o'clock):
+• Design 6-layer system architecture
+• Select ML algorithms: Random Forest, Gradient Boosting, SVM
+• Design ensemble voting mechanism
+• Plan NLTK preprocessing pipeline
+• Design Flask API endpoints
+
+PHASE 3 - IMPLEMENTATION (Right-Bottom, 4 o'clock):
+• Develop 32-feature extraction module
+• Train 3 ML models on 11,514 samples
+• Implement ensemble voting (0.4, 0.35, 0.25 weights)
+• Build Flask web application
+• Create evaluation & feedback modules
+
+PHASE 4 - TESTING (Bottom, 6 o'clock):
+• Test on 11,514 samples
+• Accuracy: 77.56% | MAE: 0.224
+• Within-±1 accuracy: 99.78%
+• 5-fold cross-validation
+• Feature ablation studies
+
+PHASE 5 - DEPLOYMENT (Left-Bottom, 8 o'clock):
+• Deploy Flask app (localhost:5000)
+• Load random_forest_model.joblib
+• Configure API endpoints
+• Setup question database
+• Create user interface
+
+PHASE 6 - MAINTENANCE (Left-Top, 10 o'clock):
+• Monitor model performance
+• Update training data
+• Fix bugs and issues
+• Add new interview domains
+• Improve feature extraction
+• Retrain models periodically
+
+FORMATTING SPECIFICATIONS:
+- Center: solid BLACK circle (150px diameter) with project name
+- 6 Phases: BLACK rectangles (rounded corners, 120x80px)
+- Position phases evenly around center circle (60° apart)
+- Arrows: curved BLACK lines (2pt) connecting phases clockwise
+- All shapes: WHITE fill, BLACK borders (2pt)
+- Text: BLACK, bold headers, bullet points for details
+- Phase numbers: circled numbers (1-6) in top-left of each box
+- Distance from center: 200px radius
+Style: Professional circular SDLC diagram, black and white, technical standard.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. DATA FLOW DIAGRAM (DFD)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a detailed Level 1 Data Flow Diagram (DFD) using standard Yourdon-DeMarco notation.
+
+DFD COMPONENTS WITH PROPER SYMBOLS:
+
+[SQUARE] EXTERNAL ENTITY 1
+┌─────────────────┐
+│  User/Job       │
+│  Seeker         │
+└─────────────────┘
+         ↓
+    Question ID,
+    Answer Text
+         ↓
+[CIRCLE] PROCESS 1.0
+    ╭─────────╮
+   ( Submit   )
+   (  Answer  )
+    ╰─────────╯
+         ↓
+[PARALLEL LINES] DATA STORE D1
+══════════════════════
+  D1: Question DB
+  (500+ questions)
+══════════════════════
+         ↓
+    Raw Answer
+         ↓
+[CIRCLE] PROCESS 2.0
+    ╭─────────╮
+   (Preprocess)
+   (  (NLTK)  )
+    ╰─────────╯
+Tokenize → Lemmatize
+Remove Stopwords
+         ↓
+   Processed Tokens
+         ↓
+[CIRCLE] PROCESS 3.0
+    ╭─────────╮
+   ( Extract  )
+   ( Features )
+    ╰─────────╯
+32 Features (6 Categories)
+         ↓
+  Feature Vector [32]
+         ↓
+[PARALLEL LINES] DATA STORE D2
+══════════════════════
+  D2: ML Models
+  (RF, GB, SVM)
+══════════════════════
+         ↓
+         ↓
+[CIRCLE] PROCESS 4.0
+    ╭─────────╮
+   ( Predict  )
+   (  Score   )
+    ╰─────────╯
+Ensemble Voting:
+RF(0.40) + GB(0.35) + SVM(0.25)
+         ↓
+    Score (0-10)
+         ↓
+[PARALLEL LINES] DATA STORE D3
+══════════════════════
+  D3: Reference
+  Answers DB
+══════════════════════
+         ↓
+   Reference Answer
+         ↓
+[CIRCLE] PROCESS 5.0
+    ╭─────────╮
+   ( Generate )
+   ( Feedback )
+    ╰─────────╯
+Compare, Analyze,
+Provide Suggestions
+         ↓
+  Score + Feedback +
+  Reference Answer
+         ↓
+[SQUARE] EXTERNAL ENTITY 1
+┌─────────────────┐
+│  User/Job       │
+│  Seeker         │
+└─────────────────┘
+
+DFD SYMBOL SPECIFICATIONS:
+- EXTERNAL ENTITIES: Squares/Rectangles (BLACK border, 2pt)
+- PROCESSES: Circles (BLACK border, 2pt) with process numbers (1.0, 2.0, etc.)
+- DATA STORES: Parallel horizontal lines (BLACK, 2pt) with ID (D1, D2, D3)
+- DATA FLOWS: Arrows (BLACK, 1.5pt) with labels describing data
+- All shapes: WHITE fill, BLACK outlines
+- Process names: verb phrases (Submit, Preprocess, Extract, Predict, Generate)
+- Data flow labels: noun phrases (Answer Text, Feature Vector, Score)
+- Font: Arial/Helvetica, BLACK text, 10-12pt
+- Layout: Top-to-bottom flow, left-aligned
+Style: Standard Yourdon-DeMarco DFD Level 1, black and white, professional technical documentation.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. MACHINE LEARNING PIPELINE DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a horizontal machine learning pipeline diagram using proper rectangular process boxes.
+
+ML PIPELINE FLOW (Left to Right):
+
+[RECTANGLE]     [RECTANGLE]      [RECTANGLE]      [RECTANGLE]
+┌─────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│ STAGE 1 │ →  │ STAGE 2  │ →  │ STAGE 3  │ →  │ STAGE 4  │
+│  DATA   │    │   DATA   │    │ FEATURE  │    │  TRAIN-  │
+│COLLECT. │    │PREPROCESS│    │ENGINEER. │    │TEST SPLIT│
+└─────────┘    └──────────┘    └──────────┘    └──────────┘
+ 11,514        Tokenize      Extract 32      80% / 20%
+ Q&A Pairs     Lemmatize     Features        9,211 / 2,303
+ Scores 0-10   Stopwords     6 Categories    Stratified
+               Clean Text    X[11514×32]     Split
+
+                              ↓
+
+[RECTANGLE]                [RECTANGLE]          [RECTANGLE]
+┌─────────┐               ┌──────────┐        ┌──────────┐
+│ STAGE 5 │               │ STAGE 6  │   →    │ STAGE 7  │
+│  MODEL  │               │ ENSEMBLE │        │  MODEL   │
+│TRAINING │               │  VOTING  │        │EVALUATION│
+└─────────┘               └──────────┘        └──────────┘
+    │                      Combine 3           Accuracy:
+    ├──→ [Box A]          Predictions         77.56%
+    │    Random           Weights:            MAE: 0.224
+    │    Forest           RF: 0.40            Within-±1:
+    │    n=100            GB: 0.35            99.78%
+    │    depth=20         SVM: 0.25           Confusion
+    │                     Weighted            Matrix 11×11
+    ├──→ [Box B]         Average             Feature
+    │    Gradient                             Importance
+    │    Boosting
+    │    lr=0.1
+    │    n=100
+    │                                         ↓
+    └──→ [Box C]                             ↓
+         Support                         [RECTANGLE]
+         Vector                         ┌──────────┐
+         Machine                        │ STAGE 8  │
+         kernel=RBF                     │  MODEL   │
+         C=1.0                          │DEPLOYMENT│
+                                        └──────────┘
+                                         Save as
+                                         .joblib
+                                         Flask API
+                                         Real-time
+                                         Inference
+
+STAGE DESCRIPTIONS:
+
+STAGE 1 - DATA COLLECTION:
+• 11,514 Interview Q&A Pairs
+• Sources: Kaggle, web scraping, manual curation
+• Scores: 0-10 scale
+• Multiple domains
+
+STAGE 2 - DATA PREPROCESSING:
+• Text cleaning (special chars, lowercase)
+• NLTK Tokenization
+• WordNetLemmatizer
+• Stopword removal
+• Label verification
+
+STAGE 3 - FEATURE ENGINEERING:
+• Extract 32 features
+• 6 categories: Basic(5), Keyword(8), Quality(7), Sentiment(4), Structural(5), Semantic(3)
+• Feature matrix: X [11514 × 32]
+• Label vector: y [11514]
+
+STAGE 4 - TRAIN-TEST SPLIT:
+• Training: 80% (9,211 samples)
+• Testing: 20% (2,303 samples)
+• Stratified split
+
+STAGE 5 - MODEL TRAINING:
+• Random Forest: 100 trees, max_depth=20
+• Gradient Boosting: lr=0.1, n_estimators=100
+• SVM: RBF kernel, C=1.0, gamma=scale
+
+STAGE 6 - ENSEMBLE VOTING:
+• Weighted combination
+• RF: 40% | GB: 35% | SVM: 25%
+• Final score = weighted average
+
+STAGE 7 - MODEL EVALUATION:
+• Accuracy: 77.56%
+• MAE: 0.224
+• Within-±1: 99.78%
+• 11×11 Confusion matrix
+• Feature importance ranking
+
+STAGE 8 - MODEL DEPLOYMENT:
+• Save: random_forest_model.joblib
+• Load in Flask app
+• API endpoints
+• Real-time inference
+
+FORMATTING SPECIFICATIONS:
+- All stages: BLACK rectangles (2pt border, rounded corners)
+- Stage boxes: 120px width × 100px height
+- Arrows: BLACK solid lines (2pt) with arrowheads
+- Stage 5 sub-boxes (A, B, C): smaller rectangles (80×60px)
+- All shapes: WHITE fill, BLACK outlines
+- Text: BLACK, Arial/Helvetica, centered in boxes
+- Stage numbers: bold, larger font
+- Horizontal spacing: 80px between stages
+- Vertical alignment: center-aligned
+Style: Professional ML pipeline flowchart, black and white, technical documentation standard.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. FEATURE EXTRACTION ARCHITECTURE DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a hierarchical diagram showing the 32-feature extraction architecture.
+
+TOP LEVEL: User Answer Text (single box at top)
+↓
+LEVEL 1: NLTK Preprocessing (single box)
+- Tokenization → Lemmatization → Stopword Removal
+↓
+LEVEL 2: Six parallel feature extraction modules (6 boxes side by side):
+
+MODULE 1 - BASIC FEATURES (5 features):
+1. Answer length (characters)
+2. Word count
+3. Sentence count
+4. Average word length
+5. Unique word ratio
+Color: Light Blue
+
+MODULE 2 - KEYWORD FEATURES (8 features):
+6. Technical term count
+7. Domain keyword density
+8. Action verb count
+9. Specific example presence
+10. Quantitative data usage
+11. Framework/tool mentions
+12. Buzzword ratio
+13. Jargon appropriateness
+Color: Green
+
+MODULE 3 - QUALITY FEATURES (7 features):
+14. Spelling error count
+15. Grammar correctness score
+16. Coherence score
+17. Redundancy ratio
+18. Clarity index
+19. Completeness score
+20. Depth of explanation
+Color: Yellow
+
+MODULE 4 - SENTIMENT FEATURES (4 features):
+21. Polarity score (-1 to 1)
+22. Subjectivity score (0 to 1)
+23. Confidence level
+24. Professional tone score
+Color: Orange
+
+MODULE 5 - STRUCTURAL FEATURES (5 features):
+25. Punctuation usage
+26. Paragraph count
+27. List/enumeration presence
+28. Formatting quality
+29. Organization score
+Color: Red
+
+MODULE 6 - SEMANTIC FEATURES (3 features):
+30. Topic relevance (cosine similarity)
+31. Context alignment
+32. Answer depth score
+Color: Purple
+↓
+LEVEL 3: Feature Vector (single box at bottom)
+- 32-dimensional numerical vector [f1, f2, f3, ..., f32]
+- Ready for ML model input
+
+Show arrows flowing from top to bottom, with all 6 modules at the same level.
+Each module box should list its features with numbers.
+Style: Clean hierarchical diagram, modern colors, professional layout with clear labels.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. ENSEMBLE VOTING MECHANISM DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a visual diagram explaining the ensemble voting mechanism with weighted averaging.
+
+TOP: Feature Vector Input
+- Single box showing [32 features] flowing downward into 3 parallel paths
+↓ ↓ ↓
+
+THREE PARALLEL MODELS (at same level, side by side):
+
+LEFT BOX - RANDOM FOREST:
+- Icon: Forest of decision trees
+- Output: Prediction = 7.8
+- Weight: 40% (0.40)
+- Contribution: 7.8 × 0.40 = 3.12
+Color: Green
+
+MIDDLE BOX - GRADIENT BOOSTING:
+- Icon: Boosted trees
+- Output: Prediction = 8.2
+- Weight: 35% (0.35)
+- Contribution: 8.2 × 0.35 = 2.87
+Color: Blue
+
+RIGHT BOX - SUPPORT VECTOR MACHINE:
+- Icon: Support vectors and hyperplane
+- Output: Prediction = 7.5
+- Weight: 25% (0.25)
+- Contribution: 7.5 × 0.25 = 1.88
+Color: Orange
+
+↓ ↓ ↓ (arrows merge)
+
+MIDDLE: WEIGHTED VOTING BOX
+- Formula displayed: Final Score = (0.40 × RF) + (0.35 × GB) + (0.25 × SVM)
+- Calculation: 3.12 + 2.87 + 1.88 = 7.87
+- Rounding: 7.9 (rounded to 1 decimal)
+Color: Purple
+
+↓
+
+BOTTOM: FINAL OUTPUT BOX
+- Large display: "Score: 7.9 / 10"
+- Confidence: High
+- Feedback: "Strong answer with good technical depth"
+Color: Gold
+
+Show weights as percentage circles next to each model.
+Use arrows with labels showing contributions flowing into voting box.
+Style: Professional, clean, with mathematical notation, modern colors.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. USE CASE DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a UML use case diagram for the AI Interview Coach Bot system.
+
+ACTORS (3 stick figures):
+1. Job Seeker (Left side)
+2. Recruiter/HR (Left side, below Job Seeker)
+3. System Admin (Right side)
+
+SYSTEM BOUNDARY: Large rounded rectangle labeled "AI Interview Coach Bot"
+
+INSIDE SYSTEM BOUNDARY - USE CASES (ovals):
+
+PRIMARY USE CASES (connected to Job Seeker):
+- Select Interview Domain
+- View Random Question
+- Submit Answer
+- Receive Score and Feedback
+- View Reference Answer
+- Request Another Question
+- Track Progress History
+
+SECONDARY USE CASES (connected to Recruiter/HR):
+- Add Interview Questions
+- Review System Analytics
+- Export Performance Reports
+- Customize Scoring Weights
+
+ADMIN USE CASES (connected to System Admin):
+- Train ML Models
+- Update Feature Extractors
+- Manage Question Database
+- Configure System Settings
+- Monitor System Performance
+- Backup/Restore Data
+
+INCLUDED RELATIONSHIPS (dashed arrows with <<include>>):
+- "Submit Answer" includes "Preprocess Text"
+- "Submit Answer" includes "Extract Features"
+- "Submit Answer" includes "Run ML Models"
+- "Receive Score" includes "Generate Feedback"
+
+EXTENDED RELATIONSHIPS (dashed arrows with <<extend>>):
+- "View Reference Answer" extends "Receive Score"
+- "Track Progress" extends "Receive Score"
+
+Show actors outside system boundary, use cases inside.
+Use solid lines to connect actors to their use cases.
+Style: Standard UML use case diagram, professional, clean layout, proper UML notation.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. DEPLOYMENT DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a UML deployment diagram showing the physical architecture of the AI Interview Coach Bot.
+
+NODE 1 - CLIENT MACHINE (3D box, top):
+- <<device>> User's Computer/Browser
+- Web Browser (Chrome, Firefox, Edge)
+- JavaScript for form handling
+- AJAX requests to Flask API
+Connection: HTTP/HTTPS (port 5000)
+
+NODE 2 - APPLICATION SERVER (3D box, middle):
+- <<execution environment>> Flask Web Server
+- Python 3.11.7 runtime
+  
+ARTIFACTS inside Application Server:
+  - main.py (Flask application)
+  - evaluator.py (ML evaluation logic)
+  - dataset_loader.py (data handling)
+  
+COMPONENTS:
+  - Flask API (RESTful endpoints)
+  - NLTK 3.8.1 (text preprocessing)
+  - scikit-learn 1.3.2 (ML models)
+  - pandas 2.1.3 (data manipulation)
+  - NumPy 1.26.2 (numerical operations)
+
+NODE 3 - MODEL STORAGE (3D box, bottom left):
+- <<data store>> Trained ML Models
+- random_forest_model.joblib (45 MB)
+- Gradient Boosting model
+- SVM model
+- Feature extractors
+Connection: File I/O
+
+NODE 4 - DATABASE (3D box, bottom right):
+- <<data store>> CSV Files
+- interview_data_with_scores.csv (11,514 rows)
+- webdev_interview_qa.csv (500+ questions)
+- competency_dictionary.json
+- competency_weights.json
+Connection: pandas.read_csv()
+
+Show 3D boxes for nodes, nested rectangles for components.
+Draw connection lines labeled with protocols (HTTP, File I/O).
+Use stereotypes: <<device>>, <<execution environment>>, <<data store>>.
+Style: Professional UML deployment diagram, 3D perspective boxes, clear labels.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. SEQUENCE DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a UML sequence diagram showing the interaction flow when a user submits an answer.
+
+LIFELINES (vertical dashed lines from top to bottom):
+1. User (stick figure)
+2. Web Browser (box)
+3. Flask API (box)
+4. Preprocessor (box)
+5. Feature Extractor (box)
+6. ML Ensemble (box)
+7. Database (box)
+
+INTERACTIONS (horizontal arrows with labels, numbered 1-18):
+
+1. User → Browser: Enters answer text and clicks Submit
+2. Browser → Flask API: POST /evaluate_answer {question_id, answer_text}
+3. Flask API → Flask API: Validate request data
+4. Flask API → Preprocessor: preprocess_text(answer_text)
+5. Preprocessor → Preprocessor: Tokenize with NLTK
+6. Preprocessor → Preprocessor: Lemmatize tokens
+7. Preprocessor → Preprocessor: Remove stopwords
+8. Preprocessor → Flask API: Return processed_tokens[]
+9. Flask API → Feature Extractor: extract_features(processed_tokens)
+10. Feature Extractor → Feature Extractor: Calculate 32 features
+11. Feature Extractor → Flask API: Return feature_vector[32]
+12. Flask API → ML Ensemble: predict(feature_vector)
+13. ML Ensemble → ML Ensemble: Random Forest predicts
+14. ML Ensemble → ML Ensemble: Gradient Boosting predicts
+15. ML Ensemble → ML Ensemble: SVM predicts
+16. ML Ensemble → ML Ensemble: Weighted voting
+17. ML Ensemble → Flask API: Return score (0-10)
+18. Flask API → Database: Fetch reference answer
+19. Database → Flask API: Return reference_answer
+20. Flask API → Flask API: Generate feedback
+21. Flask API → Browser: Return JSON {score, feedback, reference}
+22. Browser → User: Display score and feedback
+
+Add activation boxes on lifelines during processing.
+Show return messages with dashed arrows.
+Add notes for important operations (e.g., "Ensemble combines 3 predictions").
+Style: Professional UML sequence diagram, proper arrow styles, time flows top to bottom.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. CLASS DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create a UML class diagram showing the main classes in the AI Interview Coach Bot system.
+
+CLASS 1: Evaluator (top center)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- model: RandomForestRegressor
+- preprocessor: TextPreprocessor
+- feature_extractor: FeatureExtractor
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++ load_model(path: str): void
++ evaluate(answer: str): float
++ get_feedback(score: float): str
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLASS 2: TextPreprocessor (left)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- tokenizer: WordPunctTokenizer
+- lemmatizer: WordNetLemmatizer
+- stopwords: Set<str>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++ tokenize(text: str): List<str>
++ lemmatize(tokens: List<str>): List<str>
++ remove_stopwords(tokens: List<str>): List<str>
++ preprocess(text: str): List<str>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLASS 3: FeatureExtractor (right)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- keywords: Dict<str, List<str>>
+- sentiment_analyzer: SentimentIntensityAnalyzer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++ extract_basic_features(tokens: List<str>): np.array
++ extract_keyword_features(tokens: List<str>): np.array
++ extract_quality_features(tokens: List<str>): np.array
++ extract_sentiment_features(text: str): np.array
++ extract_all_features(text: str): np.array[32]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLASS 4: MLEnsemble (bottom center)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- rf_model: RandomForestRegressor
+- gb_model: GradientBoostingRegressor
+- svm_model: SVR
+- weights: List<float> = [0.4, 0.35, 0.25]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++ train(X: np.array, y: np.array): void
++ predict(features: np.array[32]): float
++ get_individual_predictions(features: np.array): List<float>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLASS 5: DatasetLoader (bottom left)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- data_path: str
+- questions_df: DataFrame
+- answers_df: DataFrame
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++ load_training_data(): Tuple<np.array, np.array>
++ load_questions(domain: str): List<str>
++ get_reference_answer(question_id: int): str
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLASS 6: FlaskApp (top)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- app: Flask
+- evaluator: Evaluator
+- dataset_loader: DatasetLoader
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++ route_home(): str
++ route_evaluate(): JSON
++ route_get_question(): JSON
++ run(): void
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RELATIONSHIPS (show with arrows):
+- FlaskApp uses Evaluator (dependency arrow)
+- FlaskApp uses DatasetLoader (dependency arrow)
+- Evaluator contains TextPreprocessor (composition, filled diamond)
+- Evaluator contains FeatureExtractor (composition, filled diamond)
+- Evaluator uses MLEnsemble (dependency arrow)
+- MLEnsemble contains rf_model, gb_model, svm_model (composition)
+
+Style: Standard UML class diagram with three sections (attributes, operations).
+Use proper UML notation: - for private, + for public.
+Show relationships with proper arrows and multiplicities.
+Professional, clean layout.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. PERFORMANCE METRICS VISUALIZATION DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPT:
+Create an infographic-style performance metrics dashboard showing key results.
+
+LAYOUT: 2x2 grid with 4 main metric cards:
+
+TOP LEFT CARD - OVERALL ACCURACY:
+- Large number: "77.56%"
+- Label: "Exact Score Accuracy"
+- Icon: Target with arrow
+- Color: Green
+- Subtitle: "8,931 / 11,514 predictions exactly correct"
+
+TOP RIGHT CARD - NEAR-PERFECT ACCURACY:
+- Large number: "99.78%"
+- Label: "Within ±1 Score"
+- Icon: Checkmark circle
+- Color: Blue
+- Subtitle: "11,489 / 11,514 within 1 point"
+
+BOTTOM LEFT CARD - MEAN ABSOLUTE ERROR:
+- Large number: "0.224"
+- Label: "MAE (Lower is Better)"
+- Icon: Ruler/measurement
+- Color: Orange
+- Subtitle: "Average error less than 0.25 points"
+
+BOTTOM RIGHT CARD - DATASET SIZE:
+- Large number: "11,514"
+- Label: "Training Samples"
+- Icon: Database
+- Color: Purple
+- Subtitle: "Diverse interview Q&A pairs"
+
+BOTTOM SECTION - HORIZONTAL BAR CHART:
+Title: "Per-Class Precision Scores"
+11 bars showing precision for each score (0-10):
+- Score 0: 68%
+- Score 1: 73%
+- Score 2: 75%
+- Score 3: 76%
+- Score 4: 78%
+- Score 5: 65% (red highlight - worst)
+- Score 6: 79%
+- Score 7: 82%
+- Score 8: 85%
+- Score 9: 81%
+- Score 10: 88% (green highlight - best)
+
+Add gradient backgrounds, modern icons, professional color scheme.
+Style: Modern dashboard infographic, clean, data-driven, visually appealing.
+
+
+================================================================================
+USAGE INSTRUCTIONS:
+================================================================================
+
+To generate these diagrams:
+
+1. USING AI IMAGE GENERATORS (DALL-E, Midjourney, Stable Diffusion):
+   - Copy the specific prompt you want
+   - Add to the end: "Professional, high-resolution, clean design, suitable for academic presentation"
+   - Generate and refine with specific color/style requests
+
+2. USING DIAGRAMMING TOOLS (Lucidchart, Draw.io, Figma):
+   - Use the prompts as specifications
+   - Follow the described structure, components, and connections
+   - Apply the suggested colors and styles
+
+3. USING CODE-BASED TOOLS (PlantUML, Mermaid):
+   - Convert the descriptions into syntax for your tool
+   - Use the element names, relationships, and layout hints provided
+
+4. FOR BEST RESULTS:
+   - Specify output format: "Create as vector SVG" or "High-res PNG 1920x1080"
+   - Add style preferences: "Flat design" or "Material design" or "Minimalist"
+   - Request specific color schemes: "Use blue gradient" or "Corporate colors"
+
+================================================================================

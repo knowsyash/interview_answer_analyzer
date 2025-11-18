@@ -32,10 +32,14 @@ class InterviewBotSession:
         """Initialize the evaluators"""
         try:
             self.rf_evaluator = RandomForestAnswerEvaluator()
+            # Load the trained Random Forest model
+            self.rf_evaluator.load_model()
             self.ref_loader = ReferenceAnswerLoader()
             self.tfidf_evaluator = TFIDFAnswerEvaluator()
         except Exception as e:
             print(f"Error initializing evaluators: {e}")
+            # Set rf_evaluator to None if model loading fails
+            self.rf_evaluator = None
     
     def _load_questions(self):
         """Load questions based on category"""
@@ -117,7 +121,7 @@ class InterviewBotSession:
         return None
     
     def evaluate_answer(self, answer):
-        """Evaluate the user's answer"""
+        """Evaluate the user's answer using both TF-IDF and Random Forest"""
         if not self.current_question:
             return None
         
@@ -132,27 +136,60 @@ class InterviewBotSession:
                 'human_score': self.current_question.get('human_score', 0)
             }
         
-        # Use TF-IDF evaluator
-        result = self.tfidf_evaluator.evaluate_answer(
+        # Evaluate with both models and combine scores
+        tfidf_result = None
+        rf_result = None
+        
+        # Get TF-IDF score
+        tfidf_result = self.tfidf_evaluator.evaluate_answer(
             self.current_question['question'],
             answer,
             reference_answer
         )
+        tfidf_score = tfidf_result['score']
+        tfidf_feedback = tfidf_result['feedback']
         
-        score = result['score']
-        feedback = result['feedback']
+        # Get Random Forest score if model is available
+        if self.rf_evaluator and self.rf_evaluator.model is not None:
+            rf_result = self.rf_evaluator.evaluate_answer(
+                self.current_question['question'],
+                answer,
+                reference_answer
+            )
+            rf_score = rf_result['predicted_score']
+            rf_feedback = rf_result['feedback']
+            
+            # Combine scores (weighted average: 50% TF-IDF + 50% Random Forest)
+            final_score = (tfidf_score * 0.5) + (rf_score * 0.5)
+            
+            # Build professional combined feedback
+            feedback_parts = [
+                f"Overall Score: {final_score:.2f}/10.0",
+                f"\n\nTF-IDF Analysis Score: {tfidf_score:.2f}/10.0",
+                f"\n{tfidf_feedback}",
+                f"\n\nMachine Learning Model Score: {rf_score:.2f}/10.0",
+                f"\n{rf_feedback}"
+            ]
+            
+            feedback = ''.join(feedback_parts)
+        else:
+            # Fallback to TF-IDF only if Random Forest not available
+            final_score = tfidf_score
+            feedback = f"Score: {tfidf_score:.2f}/10.0\n\n{tfidf_feedback}"
         
         # Store score
-        self.scores.append(score)
+        self.scores.append(final_score)
         self.answers.append({
             'question': self.current_question['question'],
             'answer': answer,
-            'score': score,
-            'feedback': feedback
+            'score': final_score,
+            'feedback': feedback,
+            'tfidf_score': tfidf_score,
+            'rf_score': rf_score if rf_result else None
         })
         
         return {
-            'score': score,
+            'score': final_score,
             'feedback': feedback,
             'reference_answer': self.current_question.get('answer', 'No reference answer available.')
         }

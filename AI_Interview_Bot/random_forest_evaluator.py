@@ -32,12 +32,15 @@ for resource in ['punkt', 'stopwords', 'wordnet', 'averaged_perceptron_tagger']:
 
 class RandomForestAnswerEvaluator:
     """
-    Advanced Random Forest evaluator with 23 engineered features
+    Optimized Random Forest evaluator with 32 engineered features
+    Trained on 11,514 samples with 77% accuracy
     Scores answers on 1-5 scale based on:
-    - STAR structure detection
-    - Competency keywords
-    - Linguistic quality
-    - Domain-specific terms
+    - STAR structure detection (4 features)
+    - Professional keywords (8 features)
+    - Linguistic quality (5 features)
+    - Structure & quality (7 features)
+    - Confidence & clarity (4 features)
+    - Advanced metrics (4 features)
     """
     
     def __init__(self):
@@ -145,75 +148,99 @@ class RandomForestAnswerEvaluator:
     
     def extract_features(self, answer, reference_answer=""):
         """
-        Extract 23 features from answer:
-        1-4: STAR component detection (4 features)
-        5-11: Competency keyword counts (7 features)
-        12-16: Linguistic features (5 features)
-        17-20: Structure features (4 features)
-        21-23: Domain-specific features (3 features)
+        Extract 32 advanced features from answer (matching optimized notebook model)
+        Returns dict with 32 features in exact order:
+        - Basic metrics (5): word_count, sentence_count, avg_word_length, char_length, words_per_sentence
+        - STAR components (4): has_situation, has_task, has_action, has_result
+        - Professional keywords (8): action_verbs, technical_terms, metrics_mentions, professional_words,
+                                     problem_solving, leadership_words, communication_words, innovation_words
+        - Structure & quality (7): has_numbers, question_marks, exclamation_marks, comma_count,
+                                   uppercase_count, conjunctions, is_complete
+        - Confidence & clarity (4): has_examples, hedging_words, confident_words, clarity_score
+        - Advanced metrics (4): unique_word_ratio, complexity_score, technical_density, professional_density
         """
-        features = {}
-        answer_clean = self.preprocess_text(answer)
-        answer_lower = answer_clean.lower()
-        tokens = word_tokenize(answer_lower)
+        answer_lower = answer.lower()
+        words = answer.split()
         
-        # Filter stop words for content analysis
-        content_tokens = [w for w in tokens if w not in self.stop_words and len(w) > 2]
+        # Basic metrics (5 features)
+        word_count = len(words)
+        sentence_count = max(1, answer.count('.') + answer.count('!') + answer.count('?'))
+        avg_word_length = np.mean([len(w) for w in words]) if words else 0
+        char_length = len(answer)
+        words_per_sentence = word_count / sentence_count
         
-        # ===== STAR FEATURES (4 features) =====
-        for component, keywords in self.star_keywords.items():
-            count = sum(1 for keyword in keywords if keyword in answer_lower)
-            features[f'star_{component}_count'] = min(count / 5, 1.0)  # Normalize to [0,1]
+        # STAR components (4 features)
+        has_situation = int(any(w in answer_lower for w in ['situation', 'context', 'when', 'where', 'background']))
+        has_task = int(any(w in answer_lower for w in ['task', 'goal', 'objective', 'needed', 'required']))
+        has_action = int(any(w in answer_lower for w in ['action', 'did', 'implemented', 'developed', 'created']))
+        has_result = int(any(w in answer_lower for w in ['result', 'achieved', 'outcome', 'success', 'impact']))
         
-        # ===== COMPETENCY FEATURES (7 features) =====
-        for competency, keywords in self.competency_keywords.items():
-            count = sum(1 for keyword in keywords if keyword in answer_lower)
-            features[f'competency_{competency}'] = min(count / 3, 1.0)  # Normalize to [0,1]
+        # Professional keywords (8 features)
+        action_verbs = sum(1 for w in words if w.lower() in ['led', 'managed', 'created', 'developed', 'implemented', 'designed', 'analyzed', 'improved', 'optimized', 'achieved'])
+        technical_terms = sum(1 for w in words if w.lower() in ['data', 'model', 'algorithm', 'analysis', 'system', 'process', 'performance', 'code', 'function', 'api'])
+        metrics_mentions = sum(1 for w in words if w.lower() in ['%', 'increased', 'decreased', 'reduced', 'improved', 'growth', 'efficiency'])
+        professional_words = sum(1 for w in words if w.lower() in ['team', 'project', 'stakeholder', 'client', 'customer', 'business', 'manager', 'collaboration'])
+        problem_solving = sum(1 for w in words if w.lower() in ['problem', 'issue', 'challenge', 'solution', 'resolved', 'fixed', 'troubleshoot'])
+        leadership_words = sum(1 for w in words if w.lower() in ['led', 'guided', 'mentored', 'coordinated', 'organized', 'delegated'])
+        communication_words = sum(1 for w in words if w.lower() in ['presented', 'explained', 'communicated', 'discussed', 'collaborated', 'shared'])
+        innovation_words = sum(1 for w in words if w.lower() in ['innovative', 'creative', 'new', 'novel', 'unique', 'pioneered'])
         
-        # ===== LINGUISTIC FEATURES (5 features) =====
-        # Length-based features
-        word_count = len(tokens)
-        features['word_count_normalized'] = min(word_count / 200, 1.0)  # Normalize to [0,1]
-        features['sentence_count'] = min(len(re.split(r'[.!?]+', answer_clean)) / 10, 1.0)
-        features['avg_word_length'] = np.mean([len(w) for w in content_tokens]) / 10 if content_tokens else 0
+        # Structure & quality (7 features)
+        has_numbers = sum(c.isdigit() for c in answer)
+        question_marks = answer.count('?')
+        exclamation_marks = answer.count('!')
+        comma_count = answer.count(',')
+        uppercase_count = sum(1 for c in answer if c.isupper())
+        conjunctions = answer.count(' and ') + answer.count(' or ') + answer.count(' but ')
+        is_complete = int(word_count > 20 and sentence_count > 1)
         
-        # Vocabulary diversity (unique words / total words)
-        features['vocabulary_diversity'] = len(set(content_tokens)) / len(content_tokens) if content_tokens else 0
+        # Confidence & clarity (4 features)
+        has_examples = int(any(w in answer_lower for w in ['example', 'instance', 'case', 'specifically', 'for instance']))
+        hedging_words = sum(1 for w in words if w.lower() in ['maybe', 'perhaps', 'possibly', 'might', 'could', 'probably'])
+        confident_words = sum(1 for w in words if w.lower() in ['will', 'definitely', 'certainly', 'always', 'successfully', 'ensured'])
+        clarity_score = int(avg_word_length < 8 and words_per_sentence < 25)
         
-        # Past tense verb usage (common in STAR responses)
-        past_tense_verbs = ['did', 'managed', 'led', 'created', 'implemented', 'achieved', 
-                           'developed', 'improved', 'coordinated', 'organized', 'completed']
-        features['past_tense_usage'] = sum(1 for verb in past_tense_verbs if verb in answer_lower) / 5
+        # Advanced metrics (4 features)
+        unique_word_ratio = len(set(words)) / len(words) if words else 0
+        complexity_score = (avg_word_length * 0.5) + (words_per_sentence * 0.3)
+        technical_density = (technical_terms + action_verbs) / max(1, word_count) * 100
+        professional_density = (professional_words + leadership_words) / max(1, word_count) * 100
         
-        # ===== STRUCTURE FEATURES (4 features) =====
-        # Presence of quantifiable results (numbers, percentages)
-        features['has_numbers'] = 1.0 if re.search(r'\d+', answer) else 0.0
-        features['has_percentage'] = 1.0 if re.search(r'\d+%', answer) else 0.0
-        
-        # First-person narrative (I, my, we)
-        first_person = ['i ', 'my ', 'we ', 'our ', 'me ']
-        features['first_person_usage'] = min(sum(1 for fp in first_person if fp in f' {answer_lower} ') / 5, 1.0)
-        
-        # Answer coherence (transition words)
-        transition_words = ['first', 'then', 'next', 'after', 'finally', 'as a result', 
-                          'therefore', 'however', 'additionally', 'furthermore']
-        features['transition_words'] = min(sum(1 for tw in transition_words if tw in answer_lower) / 3, 1.0)
-        
-        # ===== DOMAIN-SPECIFIC FEATURES (3 features) =====
-        # Web development keywords (for webdev questions)
-        webdev_keywords = ['html', 'css', 'javascript', 'react', 'api', 'database', 'frontend', 
-                          'backend', 'web', 'server', 'client', 'framework', 'library']
-        features['webdev_relevance'] = min(sum(1 for kw in webdev_keywords if kw in answer_lower) / 5, 1.0)
-        
-        # Professional terminology
-        professional_terms = ['stakeholder', 'deliverable', 'milestone', 'timeline', 'budget', 
-                             'scope', 'requirement', 'specification', 'client', 'customer']
-        features['professional_terms'] = min(sum(1 for pt in professional_terms if pt in answer_lower) / 3, 1.0)
-        
-        # Action-oriented language (strong verbs)
-        action_verbs = ['executed', 'delivered', 'optimized', 'streamlined', 'spearheaded', 
-                       'pioneered', 'orchestrated', 'facilitated', 'championed', 'transformed']
-        features['action_oriented'] = min(sum(1 for av in action_verbs if av in answer_lower) / 3, 1.0)
+        # Return as ordered dict matching notebook feature order
+        features = {
+            'word_count': word_count,
+            'sentence_count': sentence_count,
+            'avg_word_length': avg_word_length,
+            'char_length': char_length,
+            'words_per_sentence': words_per_sentence,
+            'has_situation': has_situation,
+            'has_task': has_task,
+            'has_action': has_action,
+            'has_result': has_result,
+            'action_verbs': action_verbs,
+            'technical_terms': technical_terms,
+            'metrics_mentions': metrics_mentions,
+            'professional_words': professional_words,
+            'problem_solving': problem_solving,
+            'leadership_words': leadership_words,
+            'communication_words': communication_words,
+            'innovation_words': innovation_words,
+            'has_numbers': has_numbers,
+            'question_marks': question_marks,
+            'exclamation_marks': exclamation_marks,
+            'comma_count': comma_count,
+            'uppercase_count': uppercase_count,
+            'conjunctions': conjunctions,
+            'is_complete': is_complete,
+            'has_examples': has_examples,
+            'hedging_words': hedging_words,
+            'confident_words': confident_words,
+            'clarity_score': clarity_score,
+            'unique_word_ratio': unique_word_ratio,
+            'complexity_score': complexity_score,
+            'technical_density': technical_density,
+            'professional_density': professional_density
+        }
         
         return features
     
@@ -380,10 +407,14 @@ class RandomForestAnswerEvaluator:
         """
         base_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # Candidate paths (in order)
+        # Candidate paths (in order) - prioritize optimized model from Research_Analysis
         candidates = []
         if model_path:
             candidates.append(model_path)
+        # First try the optimized model from Research_Analysis
+        research_model = os.path.join(os.path.dirname(base_dir), 'Research_Analysis', 'data', 'real_dataset_score', 'random_forest_model.joblib')
+        candidates.append(research_model)
+        # Then try local paths
         candidates.append(os.path.join(base_dir, 'data', 'random_forest_model.joblib'))
         candidates.append(os.path.join(base_dir, 'data', 'real_dataset_score', 'random_forest_model.joblib'))
         candidates.append(os.path.join(base_dir, 'data', 'real_use', 'random_forest_model.joblib'))
@@ -400,36 +431,66 @@ class RandomForestAnswerEvaluator:
             )
 
         model_data = joblib.load(found_path)
-        self.model = model_data['model']
-        self.feature_names = model_data['feature_names']
         
-        print(f"Model loaded from: {found_path}")
-        print(f"Test Accuracy: {model_data.get('test_accuracy', 'N/A'):.4f}")
-        print(f"Test MAE: {model_data.get('test_mae', 'N/A'):.4f}")
+        # Handle two formats: dict with metadata OR direct model object
+        if isinstance(model_data, dict):
+            # Format 1: Dictionary with 'model', 'feature_names', etc.
+            self.model = model_data['model']
+            self.feature_names = model_data.get('feature_names', self.feature_names)
+            print(f"Model loaded from: {found_path}")
+            print(f"Test Accuracy: {model_data.get('test_accuracy', 'N/A')}")
+            print(f"Test MAE: {model_data.get('test_mae', 'N/A')}")
+        else:
+            # Format 2: Direct model object (VotingClassifier or RandomForest)
+            self.model = model_data
+            print(f"Model loaded from: {found_path}")
+            print(f"Model type: {type(self.model).__name__}")
+            print("Warning: Model loaded without metadata (feature_names, accuracy, MAE)")
+            print("Initializing default 32 feature names...")
+        
+        # Ensure feature_names is initialized (critical for extract_features compatibility)
+        if not self.feature_names:
+            # Generate default feature names matching the 32 features from extract_features
+            self.feature_names = [
+                'word_count', 'sentence_count', 'avg_word_length', 'char_length', 'words_per_sentence',
+                'has_situation', 'has_task', 'has_action', 'has_result',
+                'action_verbs', 'technical_terms', 'metrics_mentions', 'professional_words',
+                'problem_solving', 'leadership_words', 'communication_words', 'innovation_words',
+                'has_numbers', 'question_marks', 'exclamation_marks', 'comma_count',
+                'uppercase_count', 'conjunctions', 'is_complete',
+                'has_examples', 'hedging_words', 'confident_words', 'clarity_score',
+                'unique_word_ratio', 'complexity_score', 'technical_density', 'professional_density'
+            ]
+            print(f"Feature names initialized: {len(self.feature_names)} features")
         
         return model_data
     
-    def evaluate_answer(self, answer, question="", return_details=False):
+    def evaluate_answer(self, question, answer, reference_answer=None):
         """
-        Evaluate an answer and return score (1-5 scale)
+        Evaluate an answer and return score with feedback (1-5 scale converted to 10-point scale)
         
         Args:
+            question: Interview question text
             answer: User's answer text
-            question: Interview question (optional, for context)
-            return_details: If True, return detailed feature breakdown
+            reference_answer: Reference answer dict (optional, not used by RF model)
             
         Returns:
-            If return_details=False: score (1-5)
-            If return_details=True: dict with score, confidence, features
+            dict with 'predicted_score' (on 10-point scale) and 'feedback'
         """
         if self.model is None:
             raise ValueError("Model not loaded. Call load_model() first.")
+        
+        # Detect question type (behavioral vs technical)
+        question_lower = question.lower()
+        is_behavioral = any(keyword in question_lower for keyword in 
+                          ['tell me about', 'describe a time', 'give an example', 'experience', 
+                           'situation', 'challenge you faced', 'conflict', 'leadership'])
         
         # Extract features
         features = self.extract_features(answer)
         X = np.array([list(features.values())])
         
-        # Predict score
+        # Predict score (1-5 scale)
         score = self.model.predict(X)[0]
         
         # Get prediction probabilities for confidence
@@ -445,55 +506,125 @@ class RandomForestAnswerEvaluator:
         except (ValueError, IndexError):
             confidence = max(probabilities)  # Fallback to highest probability
         
-        if return_details:
-            # Get top features influencing this prediction
+        # Get feature importances (handle both RandomForest and VotingClassifier)
+        feature_importances = None
+        try:
+            if hasattr(self.model, 'feature_importances_'):
+                # Direct RandomForest model
+                feature_importances = self.model.feature_importances_
+            elif hasattr(self.model, 'estimators_'):
+                # VotingClassifier - get from first RandomForest estimator
+                for estimator in self.model.estimators_:
+                    if hasattr(estimator, 'feature_importances_'):
+                        feature_importances = estimator.feature_importances_
+                        break
+        except:
+            pass
+        
+        # Get top features influencing this prediction
+        if feature_importances is not None:
             feature_values = pd.DataFrame({
                 'feature': self.feature_names,
                 'value': list(features.values()),
-                'importance': self.model.feature_importances_
+                'importance': feature_importances
             })
             feature_values['contribution'] = feature_values['value'] * feature_values['importance']
             top_features = feature_values.nlargest(5, 'contribution')
+        else:
+            # Fallback: just use feature values without importances
+            feature_values = pd.DataFrame({
+                'feature': self.feature_names,
+                'value': list(features.values())
+            })
+            top_features = feature_values.nlargest(5, 'value')
+        
+        # Generate feedback based on features
+        feedback_lines = self.get_feedback(score, features)
+        
+        # Build professional feedback text
+        feedback_parts = []
+        
+        # Add key strengths
+        star_score = (features.get('has_situation', 0) + features.get('has_task', 0) + 
+                     features.get('has_action', 0) + features.get('has_result', 0))
+        
+        strengths = []
+        if features.get('has_numbers', 0) > 0:
+            strengths.append("includes quantifiable metrics")
+        if features.get('technical_terms', 0) >= 2:
+            strengths.append("demonstrates technical knowledge")
+        if features.get('professional_words', 0) >= 3:
+            strengths.append("uses professional terminology")
+        if is_behavioral and star_score >= 3:
+            strengths.append("follows structured response format")
+        if features.get('word_count', 0) >= 50:
+            strengths.append("provides sufficient detail")
             
-            return {
+        if strengths:
+            feedback_parts.append("Strengths: Your answer " + ", ".join(strengths) + ".")
+        
+        # Generate context-aware improvement suggestions
+        feedback_lines = self.get_feedback(score, features, is_behavioral)
+        
+        if feedback_lines:
+            feedback_parts.append("\nAreas for improvement:")
+            for suggestion in feedback_lines[:3]:
+                feedback_parts.append(f"- {suggestion}")
+        
+        feedback_text = "\n".join(feedback_parts)
+        
+        # Convert 1-5 scale to 10-point scale (multiply by 2)
+        predicted_score_10 = score * 2.0
+        
+        # Prepare top contributing features for details
+        if 'contribution' in top_features.columns:
+            top_features_list = top_features[['feature', 'value', 'contribution']].to_dict('records')
+        else:
+            top_features_list = top_features[['feature', 'value']].to_dict('records')
+        
+        return {
+            'predicted_score': predicted_score_10,
+            'feedback': feedback_text,
+            'details': {
                 'score': int(score),
                 'confidence': float(confidence),
                 'score_distribution': {i+1: float(p) for i, p in enumerate(probabilities)},
                 'features': features,
-                'top_contributing_features': top_features[['feature', 'value', 'contribution']].to_dict('records')
+                'top_contributing_features': top_features_list
             }
-        
-        return int(score)
+        }
     
-    def get_feedback(self, score, features):
+    def get_feedback(self, score, features, is_behavioral=True):
         """Generate feedback based on score and features"""
         feedback = []
         
-        # STAR structure feedback
-        star_scores = {
-            'situation': features.get('star_situation_count', 0),
-            'task': features.get('star_task_count', 0),
-            'action': features.get('star_action_count', 0),
-            'result': features.get('star_result_count', 0)
-        }
+        # STAR structure feedback - only for behavioral questions
+        if is_behavioral:
+            star_scores = {
+                'situation': features.get('has_situation', 0),
+                'task': features.get('has_task', 0),
+                'action': features.get('has_action', 0),
+                'result': features.get('has_result', 0)
+            }
+            
+            weak_components = [comp for comp, val in star_scores.items() if val < 0.5]
+            if len(weak_components) >= 2:
+                feedback.append("Structure your answer using the STAR method (Situation, Task, Action, Result).")
         
-        weak_components = [comp for comp, val in star_scores.items() if val < 0.3]
-        if weak_components:
-            feedback.append(f"Consider adding more {', '.join(weak_components).upper()} details to strengthen your STAR structure.")
+        # Technical content feedback
+        if features.get('technical_terms', 0) < 2:
+            feedback.append("Include more technical terminology and concepts relevant to the question.")
         
         # Quantifiable results
-        if not features.get('has_numbers', 0):
+        if not features.get('has_numbers', 0) and is_behavioral:
             feedback.append("Add specific metrics or numbers to demonstrate measurable impact.")
         
         # Length feedback
-        if features.get('word_count_normalized', 0) < 0.3:
-            feedback.append("Provide more detailed explanation - aim for 60-150 words.")
-        elif features.get('word_count_normalized', 0) > 0.9:
-            feedback.append("Consider being more concise - focus on key points.")
-        
-        # Action-oriented language
-        if features.get('action_oriented', 0) < 0.2:
-            feedback.append("Use stronger action verbs (executed, delivered, optimized, etc.).")
+        word_count = features.get('word_count', 0)
+        if word_count < 40:
+            feedback.append("Provide more detailed explanation with specific examples.")
+        elif word_count > 200:
+            feedback.append("Consider being more concise while maintaining key details.")
         
         return feedback
 

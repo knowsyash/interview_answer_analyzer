@@ -189,10 +189,10 @@ function displayResults(score, feedback, reference) {
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth' });
     
-    // Color code the score
-    if (score >= 80) {
+    // Color code the score (out of 10)
+    if (score >= 8.0) {
         scoreValue.style.color = 'var(--success-color)';
-    } else if (score >= 60) {
+    } else if (score >= 6.0) {
         scoreValue.style.color = 'var(--warning-color)';
     } else {
         scoreValue.style.color = 'var(--danger-color)';

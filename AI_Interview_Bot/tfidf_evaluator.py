@@ -295,50 +295,48 @@ class TFIDFAnswerEvaluator:
         ref_word_count = len(ref_answer_text.split())
         length_ratio = self.compute_length_ratio(answer_word_count, ref_word_count)
         
-        # Scoring logic (0-10 scale)
+        # Scoring logic (0-10 scale) - improved for better base scores
         score = 0.0
         
-        # 1. Length score (0-2 points) - penalize too short or too long
+        # 1. Length score (0-2.5 points) - more lenient
         word_count = len(user_answer.split())
         if word_count < 5:
-            length_score = 0.0
+            length_score = 0.5
             length_penalty = True
         elif word_count < 15:
-            length_score = 1.0
+            length_score = 1.5
             length_penalty = False
         elif word_count < 100:
-            length_score = 2.0
+            length_score = 2.5
             length_penalty = False
         else:
-            length_score = 1.5
+            length_score = 2.0
             length_penalty = False
         
         score += length_score
         
-        # 2. Question relevance score (0-3 points)
+        # 2. Question relevance score (0-3.5 points) - improved baseline
         # Good answers should have some overlap with question terms
-        relevance_score = min(3.0, question_relevance * 6.0)
+        relevance_score = min(3.5, question_relevance * 7.0 + 1.0)
         score += relevance_score
         
-        # 3. Reference comparison score (0-5 points)
-        # Combine multiple similarity metrics
-        # TF-IDF similarity: 50%, Keyword overlap: 30%, Length ratio: 20%
-        ref_score = (reference_similarity * 0.5 + keyword_overlap * 0.3 + length_ratio * 0.2) * 5.0
-        score += ref_score
+        # 3. Reference comparison score (0-4 points)
+        # Combine multiple similarity metrics with improved weighting
+        # TF-IDF similarity: 40%, Keyword overlap: 40%, Length ratio: 20%
+        ref_score = (reference_similarity * 0.4 + keyword_overlap * 0.4 + length_ratio * 0.2) * 4.0 + 1.0
+        score += min(4.0, ref_score)
         
-        comparison_feedback = f"📊 vs Reference: TF-IDF={reference_similarity:.2f}, Keywords={keyword_overlap:.2f}, Length={length_ratio:.2f}"
-        
-        # Generate feedback
+        # Generate professional feedback
         if score >= 8.0:
-            feedback = f"✅ Excellent answer! Strong relevance and depth. {comparison_feedback}"
+            feedback = "Your answer demonstrates strong relevance and comprehensive understanding of the topic."
         elif score >= 6.0:
-            feedback = f"👍 Good answer! Shows understanding. {comparison_feedback}"
+            feedback = "Your answer shows solid understanding. Consider adding more specific examples or technical details."
         elif score >= 4.0:
-            feedback = f"⚠️ Acceptable, but needs more detail. {comparison_feedback}"
+            feedback = "Your answer covers basic concepts but would benefit from greater technical depth and more detailed explanations."
         elif score >= 2.0:
-            feedback = f"❌ Weak answer. Add more technical details. {comparison_feedback}"
+            feedback = "Your answer needs more technical details and specific examples to demonstrate full understanding."
         else:
-            feedback = f"❌ Poor answer. Needs significant improvement. {comparison_feedback}"
+            feedback = "Your answer requires significant improvement in both content depth and technical accuracy."
         
         return {
             'score': round(score, 2),

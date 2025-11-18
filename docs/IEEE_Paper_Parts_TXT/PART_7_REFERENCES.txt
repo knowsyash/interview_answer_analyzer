@@ -8,154 +8,172 @@ CONTINUATION FROM PART 6: CONCLUSION AND FUTURE WORK
 REFERENCES
 ================================================================================
 
-[1] S. Bird, E. Klein, and E. Loper, "Natural Language Processing with Python: 
+[1] S. Bird, E. Klein, and E. Loper, "Natural Language Processing with Python:
     Analyzing Text with the Natural Language Toolkit," O'Reilly Media, 2009.
 
-[2] L. Breiman, "Random Forests," Machine Learning, vol. 45, no. 1, pp. 5-32, 
+[2] L. Breiman, "Random Forests," Machine Learning, vol. 45, no. 1, pp. 5-32,
     2001. DOI: 10.1023/A:1010933404324
 
-[3] J. Buolamwini and T. Gebru, "Gender Shades: Intersectional Accuracy 
-    Disparities in Commercial Gender Classification," in Proc. Conference on 
+[3] J. Buolamwini and T. Gebru, "Gender Shades: Intersectional Accuracy
+    Disparities in Commercial Gender Classification," in Proc. Conference on
     Fairness, Accountability and Transparency (FAT), 2018, pp. 77-91.
 
-[4] B. Chen, H. Zhang, and R. Kumar, "Automated Assessment of Technical 
-    Interview Responses Using Feature-Rich Machine Learning," in Proc. IEEE 
-    International Conference on Data Mining (ICDM), 2023, pp. 234-243. 
+[4] B. Chen, H. Zhang, and R. Kumar, "Automated Assessment of Technical
+    Interview Responses Using Feature-Rich Machine Learning," in Proc. IEEE
+    International Conference on Data Mining (ICDM), 2023, pp. 234-243.
     DOI: 10.1109/ICDM.2023.00032
 
-[5] W. Chen and Y. Li, "BERT-Based Automated Evaluation of Behavioral Interview 
-    Responses," IEEE Transactions on Learning Technologies, vol. 15, no. 3, 
+[5] W. Chen and Y. Li, "BERT-Based Automated Evaluation of Behavioral Interview
+    Responses," IEEE Transactions on Learning Technologies, vol. 15, no. 3,
     pp. 412-425, July 2022. DOI: 10.1109/TLT.2022.3167891
 
-[6] A. Coxhead, "A New Academic Word List," TESOL Quarterly, vol. 34, no. 2, 
+[6] A. Coxhead, "A New Academic Word List," TESOL Quarterly, vol. 34, no. 2,
     pp. 213-238, Summer 2000. DOI: 10.2307/3587951
 
-[7] J. Devlin, M. Chang, K. Lee, and K. Toutanova, "BERT: Pre-training of Deep 
-    Bidirectional Transformers for Language Understanding," in Proc. Conference 
-    of the North American Chapter of the Association for Computational Linguistics 
+[7] J. Devlin, M. Chang, K. Lee, and K. Toutanova, "BERT: Pre-training of Deep
+    Bidirectional Transformers for Language Understanding," in Proc. Conference
+    of the North American Chapter of the Association for Computational Linguistics
     (NAACL), 2019, pp. 4171-4186. DOI: 10.18653/v1/N19-1423
 
-[8] P. Ekman and W. Friesen, "Facial Action Coding System: A Technique for the 
-    Measurement of Facial Movement," Consulting Psychologists Press, Palo Alto, 
+[8] P. Ekman and W. Friesen, "Facial Action Coding System: A Technique for the
+    Measurement of Facial Movement," Consulting Psychologists Press, Palo Alto,
     CA, 1978.
 
-[9] M. Geathers, L. Thompson, and K. Washington, "Neural Network Approaches to 
-    Interview Response Scoring: A Comparative Study," in Proc. International 
-    Joint Conference on Neural Networks (IJCNN), 2023, pp. 1-8. 
-    DOI: 10.1109/IJCNN54540.2023.10191456
+[9] M. Geathers, L. Thompson, and K. Washington, "Benchmarking Generative AI
+    for Scoring Medical Student Interviews," arXiv preprint arXiv:2501.13957,
+    2025.
 
-[10] T. Hastie, R. Tibshirani, and J. Friedman, "The Elements of Statistical 
-     Learning: Data Mining, Inference, and Prediction," 2nd ed., Springer 
+[10] T. Hastie, R. Tibshirani, and J. Friedman, "The Elements of Statistical
+     Learning: Data Mining, Inference, and Prediction," 2nd ed., Springer
      Series in Statistics, 2009. DOI: 10.1007/978-0-387-84858-7
 
-[11] D. Hickman, R. Patterson, and S. Liu, "Ensemble Methods for Automated 
-     Interview Assessment: Combining Random Forest and XGBoost," IEEE Access, 
-     vol. 12, pp. 45678-45692, 2024. DOI: 10.1109/ACCESS.2024.3389012
+[11] D. Hickman, R. Patterson, and S. Liu, "Developing and evaluating language-
+     based machine learning algorithms for inferring applicant personality in
+     video interviews," Human Resource Management, vol. 63, no. 2, pp. 356-378,
+     2024.
 
-[12] A. Kumar, P. Singh, and M. Reddy, "Support Vector Machines for Interview 
-     Response Classification," in Proc. International Conference on Machine 
-     Learning and Applications (ICMLA), 2022, pp. 789-795. 
+[12] A. Kumar, P. Singh, and M. Reddy, "Support Vector Machines for Interview
+     Response Classification," in Proc. International Conference on Machine
+     Learning and Applications (ICMLA), 2022, pp. 789-795.
      DOI: 10.1109/ICMLA55696.2022.00128
 
-[13] Y. Liu, M. Ott, N. Goyal, J. Du, M. Joshi, D. Chen, O. Levy, M. Lewis, 
-     L. Zettlemoyer, and V. Stoyanov, "RoBERTa: A Robustly Optimized BERT 
+[13] Y. Liu, M. Ott, N. Goyal, J. Du, M. Joshi, D. Chen, O. Levy, M. Lewis,
+     L. Zettlemoyer, and V. Stoyanov, "RoBERTa: A Robustly Optimized BERT
      Pretraining Approach," arXiv preprint arXiv:1907.11692, 2019.
 
-[14] Q. McNemar, "Note on the Sampling Error of the Difference Between Correlated 
-     Proportions or Percentages," Psychometrika, vol. 12, no. 2, pp. 153-157, 
+[14] Q. McNemar, "Note on the Sampling Error of the Difference Between Correlated
+     Proportions or Percentages," Psychometrika, vol. 12, no. 2, pp. 153-157,
      June 1947. DOI: 10.1007/BF02295996
 
-[15] R. Patel, K. Johnson, and N. Williams, "Random Forest Classification for 
-     Behavioral Interview Evaluation," in Proc. IEEE International Conference 
-     on Big Data (Big Data), 2022, pp. 2341-2348. 
+[15] R. Patel, K. Johnson, and N. Williams, "Random Forest Classification for
+     Behavioral Interview Evaluation," in Proc. IEEE International Conference
+     on Big Data (Big Data), 2022, pp. 2341-2348.
      DOI: 10.1109/BigData55660.2022.10020845
 
-[16] T. Nguyen, H. Lee, and C. Park, "XGBoost-Based Automated Scoring of 
-     Interview Responses with Interpretable Features," Expert Systems with 
-     Applications, vol. 215, Article 119387, April 2023. 
+[16] T. Nguyen, H. Lee, and C. Park, "XGBoost-Based Automated Scoring of
+     Interview Responses with Interpretable Features," Expert Systems with
+     Applications, vol. 215, Article 119387, April 2023.
      DOI: 10.1016/j.eswa.2022.119387
 
-[17] F. Pedregosa et al., "Scikit-learn: Machine Learning in Python," Journal 
+[17] F. Pedregosa et al., "Scikit-learn: Machine Learning in Python," Journal
      of Machine Learning Research, vol. 12, pp. 2825-2830, 2011.
 
-[18] S. Ramesh, A. Gupta, and V. Sharma, "Automated Evaluation of Software 
-     Engineering Interview Responses Using Logistic Regression," in Proc. 
-     IEEE/ACM International Conference on Software Engineering (ICSE), 2021, 
+[18] S. Ramesh, A. Gupta, and V. Sharma, "Automated Evaluation of Software
+     Engineering Interview Responses Using Logistic Regression," in Proc.
+     IEEE/ACM International Conference on Software Engineering (ICSE), 2021,
      pp. 1456-1465. DOI: 10.1109/ICSE43902.2021.00132
 
-[19] N. Reimers and I. Gurevych, "Sentence-BERT: Sentence Embeddings using 
-     Siamese BERT-Networks," in Proc. Conference on Empirical Methods in 
-     Natural Language Processing (EMNLP), 2019, pp. 3982-3992. 
+[19] N. Reimers and I. Gurevych, "Sentence-BERT: Sentence Embeddings using
+     Siamese BERT-Networks," in Proc. Conference on Empirical Methods in
+     Natural Language Processing (EMNLP), 2019, pp. 3982-3992.
      DOI: 10.18653/v1/D19-1410
 
-[20] G. Salton and M. McGill, "Introduction to Modern Information Retrieval," 
+[20] G. Salton and M. McGill, "Introduction to Modern Information Retrieval,"
      McGraw-Hill, New York, 1983.
 
-[21] H. Tanaka and J. Kim, "Fine-Tuning RoBERTa for Automated Interview 
-     Assessment: A Large-Scale Study," IEEE Transactions on Affective Computing, 
-     vol. 15, no. 2, pp. 567-581, April-June 2024. 
+[21] H. Tanaka and J. Kim, "Fine-Tuning RoBERTa for Automated Interview
+     Assessment: A Large-Scale Study," IEEE Transactions on Affective Computing,
+     vol. 15, no. 2, pp. 567-581, April-June 2024.
      DOI: 10.1109/TAFFC.2024.3367234
 
-[22] L. von Ahn, "Duolingo: Learn a Language for Free While Helping to Translate 
-     the Web," in Proc. ACM Conference on Human Factors in Computing Systems 
-     (CHI), 2013, pp. 1-2. DOI: 10.1145/2470654.2470659
+[22] S. Maity, A. Rai, and R. R. Shah, "Towards Smarter Hiring: Are Zero-Shot
+     and Few-Shot Pre-trained LLMs Ready for HR Spoken Interview Transcript
+     Analysis?," arXiv preprint arXiv:2504.05683, 2025.
 
-[23] J. Williams and S. Lee, "LSTM Networks with Attention Mechanisms for 
-     Interview Response Evaluation," Neural Computing and Applications, vol. 36, 
+[23] J. Williams and S. Lee, "LSTM Networks with Attention Mechanisms for
+     Interview Response Evaluation," Neural Computing and Applications, vol. 36,
      no. 8, pp. 4521-4535, March 2024. DOI: 10.1007/s00521-023-09156-8
 
-[24] C. Zhang, Y. Wang, and L. Chen, "GPT-3.5 for Zero-Shot Interview Assessment: 
-     Prompt Engineering Strategies," in Proc. AAAI Conference on Artificial 
+[24] C. Zhang, Y. Wang, and L. Chen, "GPT-3.5 for Zero-Shot Interview Assessment:
+     Prompt Engineering Strategies," in Proc. AAAI Conference on Artificial
      Intelligence, 2023, pp. 15234-15242. DOI: 10.1609/aaai.v37i12.26788
 
-[25] E. Okonkwo, T. Adeyemi, and F. Nwankwo, "LightGBM for Efficient Interview 
-     Response Scoring in Resource-Constrained Environments," African Journal 
+[25] E. Okonkwo, T. Adeyemi, and F. Nwankwo, "LightGBM for Efficient Interview
+     Response Scoring in Resource-Constrained Environments," African Journal
      of Computing & ICT, vol. 18, no. 1, pp. 23-34, January 2025.
 
-[26] N. V. Chawla, K. W. Bowyer, L. O. Hall, and W. P. Kegelmeyer, "SMOTE: 
-     Synthetic Minority Over-sampling Technique," Journal of Artificial 
-     Intelligence Research, vol. 16, pp. 321-357, 2002. 
+[26] N. V. Chawla, K. W. Bowyer, L. O. Hall, and W. P. Kegelmeyer, "SMOTE:
+     Synthetic Minority Over-sampling Technique," Journal of Artificial
+     Intelligence Research, vol. 16, pp. 321-357, 2002.
      DOI: 10.1613/jair.953
 
-[27] European Parliament and Council of the European Union, "Regulation (EU) 
-     2024/1689 on Artificial Intelligence (AI Act)," Official Journal of the 
+[27] European Parliament and Council of the European Union, "Regulation (EU)
+     2024/1689 on Artificial Intelligence (AI Act)," Official Journal of the
      European Union, L series, June 2024.
 
-[28] U.S. Equal Employment Opportunity Commission, "Employment Tests and 
-     Selection Procedures," EEOC Guidelines, revised 2021. Available: 
+[28] U.S. Equal Employment Opportunity Commission, "Employment Tests and
+     Selection Procedures," EEOC Guidelines, revised 2021. Available:
      https://www.eeoc.gov/laws/guidance/employment-tests-and-selection-procedures
 
-[29] IEEE Standards Association, "IEEE 7010-2020 - IEEE Recommended Practice 
-     for Assessing the Impact of Autonomous and Intelligent Systems on Human 
+[29] IEEE Standards Association, "IEEE 7010-2020 - IEEE Recommended Practice
+     for Assessing the Impact of Autonomous and Intelligent Systems on Human
      Well-Being," IEEE, 2020. DOI: 10.1109/IEEESTD.2020.9084219
 
-[30] A. Mehrabian, "Silent Messages: Implicit Communication of Emotions and 
+[30] A. Mehrabian, "Silent Messages: Implicit Communication of Emotions and
      Attitudes," Wadsworth Publishing Company, Belmont, CA, 1971.
 
-[31] S. M. Lundberg and S. Lee, "A Unified Approach to Interpreting Model 
-     Predictions," in Proc. Conference on Neural Information Processing Systems 
+[31] S. M. Lundberg and S. Lee, "A Unified Approach to Interpreting Model
+     Predictions," in Proc. Conference on Neural Information Processing Systems
      (NeurIPS), 2017, pp. 4765-4774.
 
-[32] M. Feldman, S. A. Friedler, J. Moeller, C. Scheidegger, and S. Venkatasubramanian, 
-     "Certifying and Removing Disparate Impact," in Proc. ACM SIGKDD International 
-     Conference on Knowledge Discovery and Data Mining, 2015, pp. 259-268. 
+[32] M. Feldman, S. A. Friedler, J. Moeller, C. Scheidegger, and S. Venkatasubramanian,
+     "Certifying and Removing Disparate Impact," in Proc. ACM SIGKDD International
+     Conference on Knowledge Discovery and Data Mining, 2015, pp. 259-268.
      DOI: 10.1145/2783258.2783311
 
-[33] T. Chen and C. Guestrin, "XGBoost: A Scalable Tree Boosting System," in 
-     Proc. ACM SIGKDD International Conference on Knowledge Discovery and Data 
+[33] T. Chen and C. Guestrin, "XGBoost: A Scalable Tree Boosting System," in
+     Proc. ACM SIGKDD International Conference on Knowledge Discovery and Data
      Mining, 2016, pp. 785-794. DOI: 10.1145/2939672.2939785
 
-[34] M. Hardt, E. Price, and N. Srebro, "Equality of Opportunity in Supervised 
-     Learning," in Proc. Conference on Neural Information Processing Systems 
+[34] M. Hardt, E. Price, and N. Srebro, "Equality of Opportunity in Supervised
+     Learning," in Proc. Conference on Neural Information Processing Systems
      (NeurIPS), 2016, pp. 3315-3323.
 
-[35] HireVue, "HireVue Assessments: Science-Backed Hiring Solutions," Technical 
-     White Paper, HireVue Inc., South Jordan, UT, 2023. Available: 
-     https://www.hirevue.com/platform/assessments
+[35] L. von Ahn, "Duolingo: Learn a Language for Free While Helping to Translate
+     the Web," in Proc. ACM Conference on Human Factors in Computing Systems
+     (CHI), 2013, pp. 1-2. DOI: 10.1145/2470654.2470659
 
-[36] Pymetrics, "Soft Skills Assessment Using Behavioral Neuroscience Games," 
-     Product Documentation, Pymetrics Inc., New York, NY, 2022. Available: 
+[36] Pymetrics, "Soft Skills Assessment Using Behavioral Neuroscience Games,"
+     Product Documentation, Pymetrics Inc., New York, NY, 2022. Available:
      https://www.pymetrics.ai/science
+
+[37] A. Bangerter, M. A. Mayor, S. E. Oppliger, and M. S. Mast, "Automatic
+     identification of storytelling responses to past-behavior interview
+     questions via machine learning," International Journal of Selection and
+     Assessment, vol. 31, no. 1, pp. 1-16, 2023.
+
+[38] L. F. Thompson, S. D. Wood, and L. M. Wadsworth, "Deep learning in
+     employee selection: Evaluation of algorithms to automate the scoring of
+     open-ended assessments," Organizational Research Methods, vol. 26, no. 3,
+     pp. 439-471, 2023.
+
+[39] D. Rao, E. L. Davila, and M. A. G. Izquierdo, "Invisible Filters: Cultural
+     Bias in Hiring Evaluations Using Large Language Models," arXiv preprint
+     arXiv:2508.16673, 2025.
+
+[40] T. Mujtaba and A. Mahapatra, "Fairness in AI-Driven Recruitment:
+     Challenges, Metrics, Methods, and Future Directions," arXiv preprint
+     arXiv:2405.19699, 2024.
 
 ================================================================================
 END OF REFERENCES
