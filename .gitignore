@@ -51,7 +51,6 @@ venv.bak/
 # Large Datasets
 *.csv
 *.tsv
-*.json
 *.jsonl
 *.parquet
 *.feather
@@ -60,6 +59,13 @@ real_dataset_score/
 data/
 datasets/
 raw_data/
+AI_Interview_Bot/data/
+Research_Analysis/data/
+Research_Analysis/outputs/
+
+# Keep some documentation files
+!requirements.txt
+!package.json
 
 # Kaggle
 kaggle.json
