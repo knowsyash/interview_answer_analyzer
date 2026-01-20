@@ -21,13 +21,21 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
 # Download NLTK data
-for resource in ['punkt', 'stopwords', 'wordnet', 'averaged_perceptron_tagger']:
+for resource in ['punkt', 'punkt_tab', 'stopwords', 'wordnet', 'averaged_perceptron_tagger', 'omw-1.4']:
     try:
-        nltk.data.find(f'tokenizers/{resource}' if resource == 'punkt' else 
-                      f'corpora/{resource}' if resource in ['stopwords', 'wordnet'] else 
-                      f'taggers/{resource}')
+        if resource == 'punkt':
+            nltk.data.find('tokenizers/punkt')
+        elif resource == 'punkt_tab':
+            nltk.data.find('tokenizers/punkt_tab')
+        elif resource in ['stopwords', 'wordnet', 'omw-1.4']:
+            nltk.data.find(f'corpora/{resource}')
+        elif resource == 'averaged_perceptron_tagger':
+            nltk.data.find('taggers/averaged_perceptron_tagger')
     except LookupError:
-        nltk.download(resource, quiet=True)
+        try:
+            nltk.download(resource, quiet=True)
+        except:
+            pass  # Silently fail if download not possible
 
 
 class RandomForestAnswerEvaluator:

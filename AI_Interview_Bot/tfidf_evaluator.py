@@ -20,6 +20,14 @@ except LookupError:
     nltk.download('punkt', quiet=True)
 
 try:
+    nltk.data.find('tokenizers/punkt_tab')
+except LookupError:
+    try:
+        nltk.download('punkt_tab', quiet=True)
+    except:
+        pass  # Silently fail if download not possible
+
+try:
     nltk.data.find('corpora/stopwords')
 except LookupError:
     nltk.download('stopwords', quiet=True)
@@ -32,7 +40,10 @@ except LookupError:
 try:
     nltk.data.find('corpora/omw-1.4')
 except LookupError:
-    nltk.download('omw-1.4', quiet=True)
+    try:
+        nltk.download('omw-1.4', quiet=True)
+    except:
+        pass  # Silently fail if download not possible
 
 
 class TFIDFAnswerEvaluator:
