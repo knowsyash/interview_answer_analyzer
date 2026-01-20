@@ -2,10 +2,25 @@ from flask import Flask, render_template, request, jsonify
 import random
 import pandas as pd
 import os
-from dataset_loader import DatasetLoader
+import nltk
 from random_forest_evaluator import RandomForestAnswerEvaluator
 from reference_answer_loader import ReferenceAnswerLoader
 from tfidf_evaluator import TFIDFAnswerEvaluator
+
+# Download NLTK data at startup
+import ssl
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
+for resource in ['punkt', 'punkt_tab', 'stopwords', 'wordnet', 'omw-1.4']:
+    try:
+        nltk.download(resource, quiet=True)
+    except:
+        pass
 
 app = Flask(__name__)
 
@@ -43,8 +58,6 @@ class InterviewBotSession:
     
     def _load_questions(self):
         """Load questions based on category"""
-        loader = DatasetLoader()
-        
         # Get dataset based on category
         dataset_map = {
             'webdev': 'webdev_interview_qa.csv',
