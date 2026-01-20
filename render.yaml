@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: interview-answer-analyzer
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn --chdir AI_Interview_Bot --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /
