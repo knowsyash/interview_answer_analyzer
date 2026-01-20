@@ -402,8 +402,9 @@ class RandomForestAnswerEvaluator:
         # First try the optimized model from Research_Analysis
         research_model = os.path.join(os.path.dirname(base_dir), 'Research_Analysis', 'data', 'real_dataset_score', 'random_forest_model.joblib')
         candidates.append(research_model)
-        # Then try local paths
+        # Then try local paths (both in same dir and parent dir for deployment flexibility)
         candidates.append(os.path.join(base_dir, 'real_dataset_score', 'random_forest_model.joblib'))
+        candidates.append(os.path.join(base_dir, '..', 'real_dataset_score', 'random_forest_model.joblib'))
         candidates.append(os.path.join(base_dir, 'data', 'random_forest_model.joblib'))
         candidates.append(os.path.join(base_dir, 'data', 'real_use', 'random_forest_model.joblib'))
 

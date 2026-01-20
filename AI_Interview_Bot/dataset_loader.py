@@ -21,7 +21,19 @@ class DatasetLoader:
     def __init__(self):
         # Get the directory where this script is located (AI_Interview_Bot folder)
         self.project_root = os.path.dirname(os.path.abspath(__file__))
-        self.data_dir = os.path.join(self.project_root, 'data')
+        # Try multiple data directory locations for flexibility
+        possible_data_dirs = [
+            os.path.join(self.project_root, 'real_dataset_score'),
+            os.path.join(self.project_root, '..', 'real_dataset_score'),
+            os.path.join(self.project_root, 'data')
+        ]
+        self.data_dir = None
+        for dir_path in possible_data_dirs:
+            if os.path.exists(dir_path) and os.path.isdir(dir_path):
+                self.data_dir = dir_path
+                break
+        if not self.data_dir:
+            self.data_dir = possible_data_dirs[0]  # Default to first option
         self.cache = {}
         self.available_datasets = self._scan_all_datasets()
     

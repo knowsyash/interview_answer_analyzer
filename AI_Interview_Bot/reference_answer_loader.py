@@ -14,7 +14,18 @@ class ReferenceAnswerLoader:
     
     def __init__(self):
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.data_dir = os.path.join(self.script_dir, 'real_dataset_score')
+        # Try multiple possible locations
+        possible_dirs = [
+            os.path.join(self.script_dir, 'real_dataset_score'),
+            os.path.join(self.script_dir, '..', 'real_dataset_score')
+        ]
+        self.data_dir = None
+        for dir_path in possible_dirs:
+            if os.path.exists(dir_path):
+                self.data_dir = dir_path
+                break
+        if not self.data_dir:
+            self.data_dir = possible_dirs[0]  # Default to first option
         self.reference_file = os.path.join(self.data_dir, 'interview_data_with_scores.csv')
         self.reference_data = None
         self.competency_answers = {}

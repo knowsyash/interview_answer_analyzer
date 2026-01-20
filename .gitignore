@@ -36,10 +36,9 @@ venv.bak/
 *.ipynb_checkpoints/
 *-checkpoint.ipynb
 
-# Machine Learning Models & Data
+# Machine Learning Models & Data (exclude large files but keep project files)
 *.pkl
 *.pickle
-*.joblib
 *.h5
 *.hdf5
 *.pth
@@ -48,20 +47,19 @@ venv.bak/
 *.model
 *.weights
 
-# Large Datasets
-*.csv
+# Large Datasets (exclude but keep project datasets)
 *.tsv
 *.jsonl
 *.parquet
 *.feather
 *.arrow
-real_dataset_score/
 data/
 datasets/
 raw_data/
-AI_Interview_Bot/data/
-Research_Analysis/data/
-Research_Analysis/outputs/
+
+# Keep essential project files
+!AI_Interview_Bot/real_dataset_score/*.csv
+!AI_Interview_Bot/real_dataset_score/*.joblib
 
 # Keep some documentation files
 !requirements.txt

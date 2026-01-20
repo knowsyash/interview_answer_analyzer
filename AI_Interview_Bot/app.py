@@ -57,9 +57,22 @@ class InterviewBotSession:
         }
         
         csv_file = dataset_map.get(self.category, 'webdev_interview_qa.csv')
-        csv_path = os.path.join('real_dataset_score', csv_file)
         
-        if os.path.exists(csv_path):
+        # Try multiple possible paths for flexibility (local and deployed)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        possible_paths = [
+            os.path.join(base_dir, 'real_dataset_score', csv_file),
+            os.path.join(base_dir, '..', 'real_dataset_score', csv_file),
+            os.path.join('real_dataset_score', csv_file)
+        ]
+        
+        csv_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                csv_path = path
+                break
+        
+        if csv_path and os.path.exists(csv_path):
             df = pd.read_csv(csv_path)
             
             # Filter by technology if Stack Overflow data
