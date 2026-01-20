@@ -57,7 +57,7 @@ class InterviewBotSession:
         }
         
         csv_file = dataset_map.get(self.category, 'webdev_interview_qa.csv')
-        csv_path = os.path.join('data', 'real_dataset_score', csv_file)
+        csv_path = os.path.join('real_dataset_score', csv_file)
         
         if os.path.exists(csv_path):
             df = pd.read_csv(csv_path)

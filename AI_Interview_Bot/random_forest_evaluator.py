@@ -32,15 +32,12 @@ for resource in ['punkt', 'stopwords', 'wordnet', 'averaged_perceptron_tagger']:
 
 class RandomForestAnswerEvaluator:
     """
-    Optimized Random Forest evaluator with 32 engineered features
-    Trained on 11,514 samples with 77% accuracy
+    Optimized Random Forest evaluator with 23 engineered features
+    Trained on interview Q&A samples
     Scores answers on 1-5 scale based on:
     - STAR structure detection (4 features)
-    - Professional keywords (8 features)
-    - Linguistic quality (5 features)
-    - Structure & quality (7 features)
-    - Confidence & clarity (4 features)
-    - Advanced metrics (4 features)
+    - Competency indicators (7 features)
+    - Linguistic and quality metrics (12 features)
     """
     
     def __init__(self):
@@ -148,98 +145,89 @@ class RandomForestAnswerEvaluator:
     
     def extract_features(self, answer, reference_answer=""):
         """
-        Extract 32 advanced features from answer (matching optimized notebook model)
-        Returns dict with 32 features in exact order:
-        - Basic metrics (5): word_count, sentence_count, avg_word_length, char_length, words_per_sentence
-        - STAR components (4): has_situation, has_task, has_action, has_result
-        - Professional keywords (8): action_verbs, technical_terms, metrics_mentions, professional_words,
-                                     problem_solving, leadership_words, communication_words, innovation_words
-        - Structure & quality (7): has_numbers, question_marks, exclamation_marks, comma_count,
-                                   uppercase_count, conjunctions, is_complete
-        - Confidence & clarity (4): has_examples, hedging_words, confident_words, clarity_score
-        - Advanced metrics (4): unique_word_ratio, complexity_score, technical_density, professional_density
+        Extract 23 features matching the trained model
+        Features (in exact order):
+        1-4: STAR component counts (situation, task, action, result)
+        5-11: Competency indicators (7 competencies)
+        12-23: Linguistic and quality features
         """
         answer_lower = answer.lower()
         words = answer.split()
-        
-        # Basic metrics (5 features)
         word_count = len(words)
+        
+        # 1-4: STAR component counts
+        star_situation_count = sum(1 for w in self.star_keywords['situation'] if w in answer_lower)
+        star_task_count = sum(1 for w in self.star_keywords['task'] if w in answer_lower)
+        star_action_count = sum(1 for w in self.star_keywords['action'] if w in answer_lower)
+        star_result_count = sum(1 for w in self.star_keywords['result'] if w in answer_lower)
+        
+        # 5-11: Competency indicators (binary: has keywords from each competency)
+        competency_leadership = int(any(w in answer_lower for w in self.competency_keywords['leadership']))
+        competency_teamwork = int(any(w in answer_lower for w in self.competency_keywords['teamwork']))
+        competency_problem_solving = int(any(w in answer_lower for w in self.competency_keywords['problem_solving']))
+        competency_communication = int(any(w in answer_lower for w in self.competency_keywords['communication']))
+        competency_technical = int(any(w in answer_lower for w in self.competency_keywords['technical']))
+        competency_result_orientation = int(any(w in answer_lower for w in self.competency_keywords['result_orientation']))
+        competency_adaptability = int(any(w in answer_lower for w in self.competency_keywords['adaptability']))
+        
+        # 12-23: Linguistic and quality features
+        word_count_normalized = min(word_count / 100.0, 3.0)  # Normalize to 0-3 range
         sentence_count = max(1, answer.count('.') + answer.count('!') + answer.count('?'))
         avg_word_length = np.mean([len(w) for w in words]) if words else 0
-        char_length = len(answer)
-        words_per_sentence = word_count / sentence_count
+        vocabulary_diversity = len(set(words)) / max(1, len(words))
         
-        # STAR components (4 features)
-        has_situation = int(any(w in answer_lower for w in ['situation', 'context', 'when', 'where', 'background']))
-        has_task = int(any(w in answer_lower for w in ['task', 'goal', 'objective', 'needed', 'required']))
-        has_action = int(any(w in answer_lower for w in ['action', 'did', 'implemented', 'developed', 'created']))
-        has_result = int(any(w in answer_lower for w in ['result', 'achieved', 'outcome', 'success', 'impact']))
+        # Past tense usage (common past tense verbs)
+        past_tense_verbs = ['was', 'were', 'had', 'did', 'implemented', 'managed', 'led', 'created', 'developed', 'achieved']
+        past_tense_usage = sum(1 for w in words if w.lower() in past_tense_verbs) / max(1, word_count)
         
-        # Professional keywords (8 features)
-        action_verbs = sum(1 for w in words if w.lower() in ['led', 'managed', 'created', 'developed', 'implemented', 'designed', 'analyzed', 'improved', 'optimized', 'achieved'])
-        technical_terms = sum(1 for w in words if w.lower() in ['data', 'model', 'algorithm', 'analysis', 'system', 'process', 'performance', 'code', 'function', 'api'])
-        metrics_mentions = sum(1 for w in words if w.lower() in ['%', 'increased', 'decreased', 'reduced', 'improved', 'growth', 'efficiency'])
-        professional_words = sum(1 for w in words if w.lower() in ['team', 'project', 'stakeholder', 'client', 'customer', 'business', 'manager', 'collaboration'])
-        problem_solving = sum(1 for w in words if w.lower() in ['problem', 'issue', 'challenge', 'solution', 'resolved', 'fixed', 'troubleshoot'])
-        leadership_words = sum(1 for w in words if w.lower() in ['led', 'guided', 'mentored', 'coordinated', 'organized', 'delegated'])
-        communication_words = sum(1 for w in words if w.lower() in ['presented', 'explained', 'communicated', 'discussed', 'collaborated', 'shared'])
-        innovation_words = sum(1 for w in words if w.lower() in ['innovative', 'creative', 'new', 'novel', 'unique', 'pioneered'])
+        has_numbers = int(any(c.isdigit() for c in answer))
+        has_percentage = int('%' in answer or 'percent' in answer_lower)
         
-        # Structure & quality (7 features)
-        has_numbers = sum(c.isdigit() for c in answer)
-        question_marks = answer.count('?')
-        exclamation_marks = answer.count('!')
-        comma_count = answer.count(',')
-        uppercase_count = sum(1 for c in answer if c.isupper())
-        conjunctions = answer.count(' and ') + answer.count(' or ') + answer.count(' but ')
-        is_complete = int(word_count > 20 and sentence_count > 1)
+        # First person usage
+        first_person_words = ['i', 'my', 'me', 'we', 'our', 'us']
+        first_person_usage = sum(1 for w in words if w.lower() in first_person_words) / max(1, word_count)
         
-        # Confidence & clarity (4 features)
-        has_examples = int(any(w in answer_lower for w in ['example', 'instance', 'case', 'specifically', 'for instance']))
-        hedging_words = sum(1 for w in words if w.lower() in ['maybe', 'perhaps', 'possibly', 'might', 'could', 'probably'])
-        confident_words = sum(1 for w in words if w.lower() in ['will', 'definitely', 'certainly', 'always', 'successfully', 'ensured'])
-        clarity_score = int(avg_word_length < 8 and words_per_sentence < 25)
+        # Transition words
+        transition_words = ['however', 'therefore', 'additionally', 'furthermore', 'consequently', 'meanwhile', 'subsequently']
+        transition_words_count = sum(1 for w in words if w.lower() in transition_words)
         
-        # Advanced metrics (4 features)
-        unique_word_ratio = len(set(words)) / len(words) if words else 0
-        complexity_score = (avg_word_length * 0.5) + (words_per_sentence * 0.3)
-        technical_density = (technical_terms + action_verbs) / max(1, word_count) * 100
-        professional_density = (professional_words + leadership_words) / max(1, word_count) * 100
+        # Web development relevance
+        webdev_terms = ['html', 'css', 'javascript', 'react', 'node', 'api', 'database', 'frontend', 'backend', 'server', 'client', 'web', 'http', 'rest']
+        webdev_relevance = sum(1 for w in words if w.lower() in webdev_terms)
         
-        # Return as ordered dict matching notebook feature order
+        # Professional terms
+        professional_terms_list = ['project', 'team', 'client', 'stakeholder', 'deadline', 'goal', 'objective', 'result', 'outcome', 'impact']
+        professional_terms = sum(1 for w in words if w.lower() in professional_terms_list)
+        
+        # Action oriented (action verbs)
+        action_verbs = ['led', 'managed', 'created', 'developed', 'implemented', 'designed', 'analyzed', 'improved', 'optimized', 'coordinated']
+        action_oriented = sum(1 for w in words if w.lower() in action_verbs)
+        
+        # Return as ordered dict matching trained model feature order
         features = {
-            'word_count': word_count,
+            'star_situation_count': star_situation_count,
+            'star_task_count': star_task_count,
+            'star_action_count': star_action_count,
+            'star_result_count': star_result_count,
+            'competency_leadership': competency_leadership,
+            'competency_teamwork': competency_teamwork,
+            'competency_problem_solving': competency_problem_solving,
+            'competency_communication': competency_communication,
+            'competency_technical': competency_technical,
+            'competency_result_orientation': competency_result_orientation,
+            'competency_adaptability': competency_adaptability,
+            'word_count_normalized': word_count_normalized,
             'sentence_count': sentence_count,
             'avg_word_length': avg_word_length,
-            'char_length': char_length,
-            'words_per_sentence': words_per_sentence,
-            'has_situation': has_situation,
-            'has_task': has_task,
-            'has_action': has_action,
-            'has_result': has_result,
-            'action_verbs': action_verbs,
-            'technical_terms': technical_terms,
-            'metrics_mentions': metrics_mentions,
-            'professional_words': professional_words,
-            'problem_solving': problem_solving,
-            'leadership_words': leadership_words,
-            'communication_words': communication_words,
-            'innovation_words': innovation_words,
+            'vocabulary_diversity': vocabulary_diversity,
+            'past_tense_usage': past_tense_usage,
             'has_numbers': has_numbers,
-            'question_marks': question_marks,
-            'exclamation_marks': exclamation_marks,
-            'comma_count': comma_count,
-            'uppercase_count': uppercase_count,
-            'conjunctions': conjunctions,
-            'is_complete': is_complete,
-            'has_examples': has_examples,
-            'hedging_words': hedging_words,
-            'confident_words': confident_words,
-            'clarity_score': clarity_score,
-            'unique_word_ratio': unique_word_ratio,
-            'complexity_score': complexity_score,
-            'technical_density': technical_density,
-            'professional_density': professional_density
+            'has_percentage': has_percentage,
+            'first_person_usage': first_person_usage,
+            'transition_words': transition_words_count,
+            'webdev_relevance': webdev_relevance,
+            'professional_terms': professional_terms,
+            'action_oriented': action_oriented
         }
         
         return features
@@ -291,7 +279,7 @@ class RandomForestAnswerEvaluator:
         Train Random Forest model on interview dataset
         """
         if data_dir is None:
-            data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'real_dataset_score')
+            data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'real_dataset_score')
         
         # Load both datasets
         behavioral_csv = os.path.join(data_dir, 'interview_data_with_scores.csv')
@@ -415,8 +403,8 @@ class RandomForestAnswerEvaluator:
         research_model = os.path.join(os.path.dirname(base_dir), 'Research_Analysis', 'data', 'real_dataset_score', 'random_forest_model.joblib')
         candidates.append(research_model)
         # Then try local paths
+        candidates.append(os.path.join(base_dir, 'real_dataset_score', 'random_forest_model.joblib'))
         candidates.append(os.path.join(base_dir, 'data', 'random_forest_model.joblib'))
-        candidates.append(os.path.join(base_dir, 'data', 'real_dataset_score', 'random_forest_model.joblib'))
         candidates.append(os.path.join(base_dir, 'data', 'real_use', 'random_forest_model.joblib'))
 
         found_path = None
@@ -450,16 +438,15 @@ class RandomForestAnswerEvaluator:
         
         # Ensure feature_names is initialized (critical for extract_features compatibility)
         if not self.feature_names:
-            # Generate default feature names matching the 32 features from extract_features
+            # Generate default feature names matching the 23 features from extract_features
             self.feature_names = [
-                'word_count', 'sentence_count', 'avg_word_length', 'char_length', 'words_per_sentence',
-                'has_situation', 'has_task', 'has_action', 'has_result',
-                'action_verbs', 'technical_terms', 'metrics_mentions', 'professional_words',
-                'problem_solving', 'leadership_words', 'communication_words', 'innovation_words',
-                'has_numbers', 'question_marks', 'exclamation_marks', 'comma_count',
-                'uppercase_count', 'conjunctions', 'is_complete',
-                'has_examples', 'hedging_words', 'confident_words', 'clarity_score',
-                'unique_word_ratio', 'complexity_score', 'technical_density', 'professional_density'
+                'star_situation_count', 'star_task_count', 'star_action_count', 'star_result_count',
+                'competency_leadership', 'competency_teamwork', 'competency_problem_solving',
+                'competency_communication', 'competency_technical', 'competency_result_orientation',
+                'competency_adaptability', 'word_count_normalized', 'sentence_count',
+                'avg_word_length', 'vocabulary_diversity', 'past_tense_usage', 'has_numbers',
+                'has_percentage', 'first_person_usage', 'transition_words', 'webdev_relevance',
+                'professional_terms', 'action_oriented'
             ]
             print(f"Feature names initialized: {len(self.feature_names)} features")
         
